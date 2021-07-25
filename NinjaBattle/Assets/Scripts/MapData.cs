@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MapData")]
 public class MapData : ScriptableObject
 {
-    [SerializeField] int width = default(int);
-    [SerializeField] int height = default(int);
+    [SerializeField] private int width = default(int);
+    [SerializeField] private int height = default(int);
+
+    [SerializeField] private List<Tile> tiles = new List<Tile>();
 }

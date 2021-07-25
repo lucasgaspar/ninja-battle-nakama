@@ -11,6 +11,18 @@ PrefabInstance:
       propertyPath: isWall
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7257370952237778836, guid: 3bfff523f6edc43d9865bb6c41a5386b, type: 3}
+      propertyPath: m_Color.b
+      value: 0.3529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7257370952237778836, guid: 3bfff523f6edc43d9865bb6c41a5386b, type: 3}
+      propertyPath: m_Color.g
+      value: 0.3529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7257370952237778836, guid: 3bfff523f6edc43d9865bb6c41a5386b, type: 3}
+      propertyPath: m_Color.r
+      value: 0.43529412
+      objectReference: {fileID: 0}
     - target: {fileID: 7257370952237778837, guid: 3bfff523f6edc43d9865bb6c41a5386b, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -57,7 +69,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7257370952237778839, guid: 3bfff523f6edc43d9865bb6c41a5386b, type: 3}
       propertyPath: m_Name
-      value: TileWall
+      value: 1-TileWall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3bfff523f6edc43d9865bb6c41a5386b, type: 3}
