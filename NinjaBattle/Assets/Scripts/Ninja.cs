@@ -19,7 +19,6 @@ public class Ninja : MonoBehaviour
     private Vector2Int desiredCoordinates = new Vector2Int();
     private Vector2Int previousCoordinates = new Vector2Int();
     private Vector2 currentCoordinates = new Vector2();
-    private bool requestedJump = false;
     private bool isJumping = false;
 
     private void Start()
@@ -59,7 +58,7 @@ public class Ninja : MonoBehaviour
 
     private void ArrivedIntoNewTile(Vector2Int previousCoordinates, Vector2Int newCoordinates)
     {
-        if (!isJumping && requestedJump)
+        if (!isJumping && Map.instance.IsDangerousTile(newCoordinates))
         {
             JumpStart();
             Map.instance.SetTileAsDangerous(previousCoordinates);
@@ -82,7 +81,6 @@ public class Ninja : MonoBehaviour
     private void JumpStart()
     {
         isJumping = true;
-        requestedJump = false;
         spriteRenderer.transform.localScale = Vector3.one * 0.55f;
         StartCoroutine(DoAFlip());
     }
@@ -117,8 +115,5 @@ public class Ninja : MonoBehaviour
             nextDirection = Direction.East;
         else if (Input.GetKeyDown(keyDown))
             nextDirection = Direction.South;
-
-        if (Input.GetKeyDown(keyJump))
-            requestedJump = true;
     }
 }
