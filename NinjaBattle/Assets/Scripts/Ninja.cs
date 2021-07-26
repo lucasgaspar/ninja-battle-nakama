@@ -62,7 +62,6 @@ public class Ninja : MonoBehaviour
         {
             JumpStart();
             Map.instance.SetTileAsDangerous(previousCoordinates);
-
         }
         else if (isJumping)
         {
