@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Ninja : MonoBehaviour
 {
-    private const float Speed = 5f;
+    private const float Speed = 6.5f;
 
     [SerializeField] private SpriteRenderer spriteRenderer = null;
     [SerializeField] private Vector2Int startingCoordinates = new Vector2Int();
@@ -12,7 +12,6 @@ public class Ninja : MonoBehaviour
     [SerializeField] private KeyCode keyLeft = KeyCode.None;
     [SerializeField] private KeyCode keyRight = KeyCode.None;
     [SerializeField] private KeyCode keyDown = KeyCode.None;
-    [SerializeField] private KeyCode keyJump = KeyCode.None;
 
     private Direction currentDirection = Direction.East;
     private Direction nextDirection = Direction.Undefined;
@@ -20,6 +19,7 @@ public class Ninja : MonoBehaviour
     private Vector2Int previousCoordinates = new Vector2Int();
     private Vector2 currentCoordinates = new Vector2();
     private bool isJumping = false;
+    private bool beforeHalfStep = true;
 
     private void Start()
     {
@@ -31,6 +31,7 @@ public class Ninja : MonoBehaviour
 
     private IEnumerator Step()
     {
+        beforeHalfStep = true;
         Invoke(nameof(HalfStep), 1f / Speed / 2f);
         while (Vector2.Distance(currentCoordinates, desiredCoordinates) > 0)
         {
@@ -53,12 +54,18 @@ public class Ninja : MonoBehaviour
 
     private void HalfStep()
     {
+        beforeHalfStep = false;
         ArrivedIntoNewTile(previousCoordinates, desiredCoordinates);
     }
 
     private void ArrivedIntoNewTile(Vector2Int previousCoordinates, Vector2Int newCoordinates)
     {
-        if (!isJumping && Map.instance.IsDangerousTile(newCoordinates))
+        if (Map.instance.IsWallTile(newCoordinates))
+        {
+            Map.instance.SetTileAsDangerous(previousCoordinates);
+            KillNinja();
+        }
+        else if (!isJumping && Map.instance.IsDangerousTile(newCoordinates))
         {
             JumpStart();
             Map.instance.SetTileAsDangerous(previousCoordinates);
@@ -67,13 +74,13 @@ public class Ninja : MonoBehaviour
         {
             JumpEnd();
             if (Map.instance.IsDangerousTile(newCoordinates))
-                Destroy(this.gameObject);
+                KillNinja();
         }
         else
         {
             Map.instance.SetTileAsDangerous(previousCoordinates);
             if (Map.instance.IsDangerousTile(newCoordinates))
-                Destroy(this.gameObject);
+                KillNinja();
         }
     }
 
@@ -114,5 +121,21 @@ public class Ninja : MonoBehaviour
             nextDirection = Direction.East;
         else if (Input.GetKeyDown(keyDown))
             nextDirection = Direction.South;
+
+        /*if (nextDirection != Direction.Undefined)
+        {
+            if (beforeHalfStep)
+                desiredCoordinates = previousCoordinates + nextDirection.ToVector2();
+            else
+                desiredCoordinates = desiredCoordinates + nextDirection.ToVector2();
+
+            currentDirection = nextDirection;
+            nextDirection = Direction.Undefined;
+        }*/
+    }
+
+    private void KillNinja()
+    {
+        Destroy(gameObject);
     }
 }

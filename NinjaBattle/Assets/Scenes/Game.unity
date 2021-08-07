@@ -297,6 +297,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ninja
       objectReference: {fileID: 0}
+    - target: {fileID: 7820546168598295345, guid: 3452bc54b964f40b29e564bb45db8466, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7820546168598295345, guid: 3452bc54b964f40b29e564bb45db8466, type: 3}
+      propertyPath: m_Color.g
+      value: 0.81172174
+      objectReference: {fileID: 0}
+    - target: {fileID: 7820546168598295345, guid: 3452bc54b964f40b29e564bb45db8466, type: 3}
+      propertyPath: m_Color.r
+      value: 0.4575472
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3452bc54b964f40b29e564bb45db8466, type: 3}
 --- !u!1001 &1525605309
@@ -386,6 +398,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7820546168598295345, guid: 3452bc54b964f40b29e564bb45db8466, type: 3}
+      propertyPath: m_Color.b
+      value: 0.5990566
+      objectReference: {fileID: 0}
+    - target: {fileID: 7820546168598295345, guid: 3452bc54b964f40b29e564bb45db8466, type: 3}
+      propertyPath: m_Color.g
+      value: 0.5990566
+      objectReference: {fileID: 0}
+    - target: {fileID: 7820546168598295345, guid: 3452bc54b964f40b29e564bb45db8466, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3452bc54b964f40b29e564bb45db8466, type: 3}
 --- !u!1 &1668209874
@@ -431,9 +455,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fbfc724422544f45aa3c9a971fda7e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapData: {fileID: 11400000, guid: d06941b1d0cf541e18b0ace43f5db5dc, type: 2}
   hazardPrefab: {fileID: 7257370952237778839, guid: 74a648c33e6fa4d8ba182324be6b9a1a, type: 3}
-  maps:
-  - {fileID: 4900000, guid: f3225b0076ccc465dbea73db9f3c83b1, type: 3}
-  tiles:
-  - {fileID: 6042686781707985552, guid: 3bfff523f6edc43d9865bb6c41a5386b, type: 3}
-  - {fileID: 2346059094437091577, guid: faa3976f3290a469e9aa8babd4e0368c, type: 3}
+  wallPrefab: {fileID: 2721204774210762168, guid: faa3976f3290a469e9aa8babd4e0368c, type: 3}
