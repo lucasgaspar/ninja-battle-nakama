@@ -19,7 +19,6 @@ public class Ninja : MonoBehaviour
     private Vector2Int previousCoordinates = new Vector2Int();
     private Vector2 currentCoordinates = new Vector2();
     private bool isJumping = false;
-    private bool beforeHalfStep = true;
 
     private void Start()
     {
@@ -31,7 +30,6 @@ public class Ninja : MonoBehaviour
 
     private IEnumerator Step()
     {
-        beforeHalfStep = true;
         Invoke(nameof(HalfStep), 1f / Speed / 2f);
         while (Vector2.Distance(currentCoordinates, desiredCoordinates) > 0)
         {
@@ -54,7 +52,6 @@ public class Ninja : MonoBehaviour
 
     private void HalfStep()
     {
-        beforeHalfStep = false;
         ArrivedIntoNewTile(previousCoordinates, desiredCoordinates);
     }
 
@@ -121,17 +118,6 @@ public class Ninja : MonoBehaviour
             nextDirection = Direction.East;
         else if (Input.GetKeyDown(keyDown))
             nextDirection = Direction.South;
-
-        /*if (nextDirection != Direction.Undefined)
-        {
-            if (beforeHalfStep)
-                desiredCoordinates = previousCoordinates + nextDirection.ToVector2();
-            else
-                desiredCoordinates = desiredCoordinates + nextDirection.ToVector2();
-
-            currentDirection = nextDirection;
-            nextDirection = Direction.Undefined;
-        }*/
     }
 
     private void KillNinja()
