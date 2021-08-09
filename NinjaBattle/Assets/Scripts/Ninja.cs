@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Ninja : MonoBehaviour
 {
-    private const float Speed = 6.5f;
+    private const float TickRate = 5f;
 
     [SerializeField] private SpriteRenderer spriteRenderer = null;
     [SerializeField] private Vector2Int startingCoordinates = new Vector2Int();
@@ -16,13 +16,12 @@ public class Ninja : MonoBehaviour
     private Direction currentDirection = Direction.East;
     private Direction nextDirection = Direction.Undefined;
     private Vector2Int desiredCoordinates = new Vector2Int();
-    private Vector2Int previousCoordinates = new Vector2Int();
-    private Vector2 currentCoordinates = new Vector2();
+    private Vector2Int currentCoordinates = new Vector2Int();
     private bool isJumping = false;
 
     private void Start()
     {
-        currentCoordinates = desiredCoordinates = previousCoordinates = startingCoordinates;
+        currentCoordinates = desiredCoordinates = startingCoordinates;
         desiredCoordinates += startingDirection.ToVector2();
         currentDirection = startingDirection;
         StartCoroutine(Step());
@@ -30,54 +29,38 @@ public class Ninja : MonoBehaviour
 
     private IEnumerator Step()
     {
-        Invoke(nameof(HalfStep), 1f / Speed / 2f);
-        while (Vector2.Distance(currentCoordinates, desiredCoordinates) > 0)
+        var tickDuration = 1 / TickRate;
+        while (true)
         {
-            currentCoordinates = Vector2.MoveTowards(currentCoordinates, desiredCoordinates, Speed * Time.deltaTime);
-            transform.position = currentCoordinates;
-            yield return null;
-        }
+            yield return new WaitForSeconds(tickDuration);
+            if (!isJumping && nextDirection != currentDirection.Opposite() && nextDirection != Direction.Undefined)
+                currentDirection = nextDirection;
 
-        previousCoordinates = desiredCoordinates;
-        if (!isJumping && nextDirection != currentDirection.Opposite() && nextDirection != Direction.Undefined)
-        {
-            currentDirection = nextDirection;
-            nextDirection = Direction.Undefined;
-        }
-
-        desiredCoordinates += currentDirection.ToVector2();
-        StartCoroutine(Step());
-        yield break;
-    }
-
-    private void HalfStep()
-    {
-        ArrivedIntoNewTile(previousCoordinates, desiredCoordinates);
-    }
-
-    private void ArrivedIntoNewTile(Vector2Int previousCoordinates, Vector2Int newCoordinates)
-    {
-        if (Map.instance.IsWallTile(newCoordinates))
-        {
-            Map.instance.SetTileAsDangerous(previousCoordinates);
-            KillNinja();
-        }
-        else if (!isJumping && Map.instance.IsDangerousTile(newCoordinates))
-        {
-            JumpStart();
-            Map.instance.SetTileAsDangerous(previousCoordinates);
-        }
-        else if (isJumping)
-        {
-            JumpEnd();
-            if (Map.instance.IsDangerousTile(newCoordinates))
+            Vector2Int newCoordinates = currentCoordinates + currentDirection.ToVector2();
+            if (Map.instance.IsWallTile(newCoordinates))
+            {
+                Map.instance.SetTileAsDangerous(currentCoordinates);
                 KillNinja();
-        }
-        else
-        {
-            Map.instance.SetTileAsDangerous(previousCoordinates);
-            if (Map.instance.IsDangerousTile(newCoordinates))
-                KillNinja();
+            }
+            else if (!isJumping && Map.instance.IsDangerousTile(newCoordinates))
+            {
+                JumpStart();
+                Map.instance.SetTileAsDangerous(currentCoordinates);
+            }
+            else if (isJumping)
+            {
+                JumpEnd();
+                if (Map.instance.IsDangerousTile(newCoordinates))
+                    KillNinja();
+            }
+            else
+            {
+                Map.instance.SetTileAsDangerous(currentCoordinates);
+                if (Map.instance.IsDangerousTile(newCoordinates))
+                    KillNinja();
+            }
+            currentCoordinates = newCoordinates;
+            transform.position = ((Vector3Int)currentCoordinates);
         }
     }
 
@@ -85,21 +68,6 @@ public class Ninja : MonoBehaviour
     {
         isJumping = true;
         spriteRenderer.transform.localScale = Vector3.one * 0.55f;
-        StartCoroutine(DoAFlip());
-    }
-
-    private IEnumerator DoAFlip()
-    {
-        float totalDuration = 1f / Speed;
-        float elapsedTime = 0f;
-        while (elapsedTime < totalDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            spriteRenderer.transform.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(0, 360, elapsedTime / totalDuration));
-            yield return null;
-        }
-        spriteRenderer.transform.rotation = Quaternion.identity;
-        yield break;
     }
 
     private void JumpEnd()
