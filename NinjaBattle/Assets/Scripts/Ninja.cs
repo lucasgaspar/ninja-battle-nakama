@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Ninja : MonoBehaviour
@@ -14,7 +15,7 @@ public class Ninja : MonoBehaviour
     [SerializeField] private KeyCode keyDown = KeyCode.None;
 
     private Direction currentDirection = Direction.East;
-    private Direction nextDirection = Direction.Undefined;
+    private Queue<Direction> nextDirections = new Queue<Direction>();
     private Vector2Int desiredCoordinates = new Vector2Int();
     private Vector2Int currentCoordinates = new Vector2Int();
     private bool isJumping = false;
@@ -33,8 +34,21 @@ public class Ninja : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(tickDuration);
-            if (!isJumping && nextDirection != currentDirection.Opposite() && nextDirection != Direction.Undefined)
-                currentDirection = nextDirection;
+            if (!isJumping)
+            {
+                while (nextDirections.Count > 0)
+                {
+                    var nextDirection = nextDirections.Dequeue();
+                    if (nextDirection == currentDirection)
+                        continue;
+
+                    if (nextDirection == currentDirection.Opposite())
+                        continue;
+
+                    currentDirection = nextDirection;
+                    break;
+                }
+            }
 
             Vector2Int newCoordinates = currentCoordinates + currentDirection.ToVector2();
             if (Map.instance.IsWallTile(newCoordinates))
@@ -59,8 +73,9 @@ public class Ninja : MonoBehaviour
                 if (Map.instance.IsDangerousTile(newCoordinates))
                     KillNinja();
             }
+
             currentCoordinates = newCoordinates;
-            transform.position = ((Vector3Int)currentCoordinates);
+            spriteRenderer.transform.position = ((Vector3Int)currentCoordinates);
         }
     }
 
@@ -79,13 +94,13 @@ public class Ninja : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(keyUp))
-            nextDirection = Direction.North;
+            nextDirections.Enqueue(Direction.North);
         else if (Input.GetKeyDown(keyLeft))
-            nextDirection = Direction.West;
+            nextDirections.Enqueue(Direction.West);
         else if (Input.GetKeyDown(keyRight))
-            nextDirection = Direction.East;
+            nextDirections.Enqueue(Direction.East);
         else if (Input.GetKeyDown(keyDown))
-            nextDirection = Direction.South;
+            nextDirections.Enqueue(Direction.South);
     }
 
     private void KillNinja()
