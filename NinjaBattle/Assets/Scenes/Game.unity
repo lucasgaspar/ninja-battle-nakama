@@ -332,7 +332,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4420585516005957341, guid: 3452bc54b964f40b29e564bb45db8466, type: 3}
       propertyPath: startingCoordinates.x
-      value: 11
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7257370952237778836, guid: 3452bc54b964f40b29e564bb45db8466, type: 3}
       propertyPath: m_Color.b
