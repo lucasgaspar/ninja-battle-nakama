@@ -2,7 +2,6 @@
 
 public enum Direction
 {
-    Undefined,
     North,
     West,
     East,
@@ -31,7 +30,7 @@ static class DirectionMethods
             case Direction.West: return Direction.East;
             case Direction.East: return Direction.West;
             case Direction.South: return Direction.North;
-            default: return Direction.Undefined;
+            default: return Direction.West;
         }
     }
 }

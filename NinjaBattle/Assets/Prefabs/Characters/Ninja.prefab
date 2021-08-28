@@ -128,10 +128,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 7820546168598295345}
-  startingCoordinates: {x: 0, y: 0}
-  startingDirection: 3
-  keyUp: 273
-  keyLeft: 276
-  keyRight: 275
-  keyDown: 274
-  keyJump: 0
+  ninjaColors:
+  - {r: 0.7924528, g: 0.018689923, b: 0.018689923, a: 1}
+  - {r: 0.03818085, g: 0.03818085, b: 0.735849, a: 1}
