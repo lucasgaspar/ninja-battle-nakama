@@ -13,12 +13,12 @@ public class InputManager : MonoBehaviour
     {
         GameManager gameManager = GameManager.Instance;
         if (Input.GetKeyDown(keyUp))
-            gameManager.SetNextPlayerInput(playerNumber, gameManager.CurrentTick - delay, Direction.North);
+            gameManager.SetPlayerInput(playerNumber, gameManager.CurrentTick - delay, Direction.North);
         else if (Input.GetKeyDown(keyLeft))
-            gameManager.SetNextPlayerInput(playerNumber, gameManager.CurrentTick - delay, Direction.West);
+            gameManager.SetPlayerInput(playerNumber, gameManager.CurrentTick - delay, Direction.West);
         else if (Input.GetKeyDown(keyRight))
-            gameManager.SetNextPlayerInput(playerNumber, gameManager.CurrentTick - delay, Direction.East);
+            gameManager.SetPlayerInput(playerNumber, gameManager.CurrentTick - delay, Direction.East);
         else if (Input.GetKeyDown(keyDown))
-            gameManager.SetNextPlayerInput(playerNumber, gameManager.CurrentTick - delay, Direction.South);
+            gameManager.SetPlayerInput(playerNumber, gameManager.CurrentTick - delay, Direction.South);
     }
 }

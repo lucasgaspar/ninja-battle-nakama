@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,8 +10,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<string> players = new List<string>();
     [SerializeField] private Map map = null;
 
-    private Dictionary<int, Queue<Direction>> nextPlayerMovement = new Dictionary<int, Queue<Direction>>();
     private MapData currentMap = null;
+
+    public event Action<int> onTick = null;
+    public event Action<int> onRewind = null;
 
     public float TickDuration { get => 1 / TickRate; }
     public int CurrentTick { get; private set; }
@@ -41,16 +44,23 @@ public class GameManager : MonoBehaviour
 
     private void ProcessTick()
     {
-        map.Ninjas.ForEach(ninja => ninja.ProcessTick());
+        onTick?.Invoke(CurrentTick);
         CurrentTick++;
     }
 
-    public void SetNextPlayerInput(int playerNumber, int tick, Direction direction)
+    public void SetPlayerInput(int playerNumber, int tick, Direction direction)
     {
-        if (!nextPlayerMovement.ContainsKey(playerNumber))
-            nextPlayerMovement.Add(playerNumber, new Queue<Direction>());
+        if (tick < default(int))
+            return;
 
-        nextPlayerMovement[playerNumber].Enqueue(direction);
-        map.GetNinja(playerNumber).SetNextDirection(direction);
+        map.GetNinja(playerNumber).SetInput(direction, tick);
+        if (tick < CurrentTick)
+            onRewind?.Invoke(tick);
+
+        while (tick < CurrentTick)
+        {
+            onTick?.Invoke(tick);
+            tick++;
+        }
     }
 }

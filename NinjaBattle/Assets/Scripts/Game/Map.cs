@@ -8,8 +8,9 @@ public class Map : MonoBehaviour
     [SerializeField] private GameObject wallPrefab = null;
     [SerializeField] private Ninja ninjaPrefab = null;
 
-    private List<Vector2Int> wallTiles = new List<Vector2Int>();
-    private List<Vector2Int> dangerousTiles = new List<Vector2Int>();
+    private List<Vector2Int> mapWallTiles = new List<Vector2Int>();
+    private List<Vector2Int> mapDangerousTiles = new List<Vector2Int>();
+    private List<Vector2Int> ninjaDangerousTiles = new List<Vector2Int>();
 
     public List<Ninja> Ninjas { get; private set; } = new List<Ninja>();
 
@@ -45,7 +46,7 @@ public class Map : MonoBehaviour
             return;
 
         Instantiate(wallPrefab, (Vector2)coordinates, Quaternion.identity);
-        wallTiles.Add(coordinates);
+        mapWallTiles.Add(coordinates);
     }
 
     public void SetTileAsWater(Vector2Int coordinates)
@@ -54,7 +55,7 @@ public class Map : MonoBehaviour
             return;
 
         Instantiate(waterPrefab, (Vector2)coordinates, Quaternion.identity);
-        dangerousTiles.Add(coordinates);
+        mapDangerousTiles.Add(coordinates);
     }
 
     public void SetTileAsDangerous(Color color, Vector2Int coordinates)
@@ -63,24 +64,25 @@ public class Map : MonoBehaviour
             return;
 
         GameObject dangerousTile = Instantiate(hazardPrefab, (Vector2)coordinates, Quaternion.identity);
-        dangerousTiles.Add(coordinates);
+        ninjaDangerousTiles.Add(coordinates);
         color.a = 0.75f;
         dangerousTile.GetComponent<SpriteRenderer>().color = color;
     }
 
     public bool IsWallTile(Vector2Int coordinates)
     {
-        return wallTiles.Contains(coordinates);
+        return mapWallTiles.Contains(coordinates);
     }
 
     public bool IsDangerousTile(Vector2Int coordinates)
     {
-        return dangerousTiles.Contains(coordinates);
+        return mapDangerousTiles.Contains(coordinates) || ninjaDangerousTiles.Contains(coordinates);
     }
 
     public void InstantiateNinja(int playerNumber, SpawnPoint spawnPoint)
     {
         Ninja ninja = Instantiate(ninjaPrefab);
+        ninja.gameObject.name = "N" + playerNumber;
         ninja.Initialize(spawnPoint, playerNumber, this);
         Ninjas.Add(ninja);
     }
