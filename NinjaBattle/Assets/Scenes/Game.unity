@@ -238,7 +238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 1
-  delay: 3
+  delay: 1
   keyUp: 273
   keyLeft: 276
   keyRight: 275
@@ -336,7 +336,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fbfc724422544f45aa3c9a971fda7e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hazardPrefab: {fileID: 7257370952237778839, guid: 74a648c33e6fa4d8ba182324be6b9a1a, type: 3}
+  hazardPrefab: {fileID: 4394506244331721866, guid: 74a648c33e6fa4d8ba182324be6b9a1a, type: 3}
   waterPrefab: {fileID: 7257370952237778839, guid: af03b67e6dd944e4abd52bc538111050, type: 3}
   wallPrefab: {fileID: 2721204774210762168, guid: faa3976f3290a469e9aa8babd4e0368c, type: 3}
   ninjaPrefab: {fileID: 4420585516005957341, guid: 3452bc54b964f40b29e564bb45db8466, type: 3}

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Map : MonoBehaviour
 {
-    [SerializeField] private GameObject hazardPrefab = null;
+    [SerializeField] private Hazard hazardPrefab = null;
     [SerializeField] private GameObject waterPrefab = null;
     [SerializeField] private GameObject wallPrefab = null;
     [SerializeField] private Ninja ninjaPrefab = null;
@@ -58,15 +58,22 @@ public class Map : MonoBehaviour
         mapDangerousTiles.Add(coordinates);
     }
 
-    public void SetTileAsDangerous(Color color, Vector2Int coordinates)
+    public void SetHazard(int tick, Color color, Vector2Int coordinates)
     {
         if (IsDangerousTile(coordinates))
             return;
 
-        GameObject dangerousTile = Instantiate(hazardPrefab, (Vector2)coordinates, Quaternion.identity);
+        Hazard dangerousTile = Instantiate(hazardPrefab, (Vector2)coordinates, Quaternion.identity);
+        dangerousTile.Initialize(tick, coordinates, color, this);
         ninjaDangerousTiles.Add(coordinates);
-        color.a = 0.75f;
-        dangerousTile.GetComponent<SpriteRenderer>().color = color;
+    }
+
+    public void RemoveHazard(Hazard hazard)
+    {
+        if (!ninjaDangerousTiles.Contains(hazard.Coordinates))
+            return;
+
+        ninjaDangerousTiles.Remove(hazard.Coordinates);
     }
 
     public bool IsWallTile(Vector2Int coordinates)
@@ -82,7 +89,6 @@ public class Map : MonoBehaviour
     public void InstantiateNinja(int playerNumber, SpawnPoint spawnPoint)
     {
         Ninja ninja = Instantiate(ninjaPrefab);
-        ninja.gameObject.name = "N" + playerNumber;
         ninja.Initialize(spawnPoint, playerNumber, this);
         Ninjas.Add(ninja);
     }
