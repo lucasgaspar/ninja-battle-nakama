@@ -28,6 +28,8 @@ public class Ninja : MonoBehaviour
         GameManager.Instance.onRewind += Rewind;
         isJumping[0] = false;
         isDead[0] = false;
+        positions[0] = currentCoordinates;
+        directions[0] = currentDirection;
     }
 
     private void OnDestroy()

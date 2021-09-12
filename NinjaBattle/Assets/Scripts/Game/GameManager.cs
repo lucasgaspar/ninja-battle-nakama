@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
 
     public void SetPlayerInput(int playerNumber, int tick, Direction direction)
     {
-        if (tick < default(int))
+        if (tick <= default(int))
             return;
 
         map.GetNinja(playerNumber).SetInput(direction, tick);
