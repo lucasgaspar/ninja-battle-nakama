@@ -45,7 +45,7 @@ public class Map : MonoBehaviour
         if (IsWallTile(coordinates))
             return;
 
-        Instantiate(wallPrefab, (Vector2)coordinates, Quaternion.identity);
+        Instantiate(wallPrefab, (Vector2)coordinates, Quaternion.identity, transform);
         mapWallTiles.Add(coordinates);
     }
 
@@ -54,7 +54,7 @@ public class Map : MonoBehaviour
         if (IsDangerousTile(coordinates))
             return;
 
-        Instantiate(waterPrefab, (Vector2)coordinates, Quaternion.identity);
+        Instantiate(waterPrefab, (Vector2)coordinates, Quaternion.identity, transform);
         mapDangerousTiles.Add(coordinates);
     }
 
@@ -63,7 +63,7 @@ public class Map : MonoBehaviour
         if (IsDangerousTile(coordinates))
             return;
 
-        Hazard dangerousTile = Instantiate(hazardPrefab, (Vector2)coordinates, Quaternion.identity);
+        Hazard dangerousTile = Instantiate(hazardPrefab, (Vector2)coordinates, Quaternion.identity, transform);
         dangerousTile.Initialize(tick, coordinates, color, this);
         ninjaDangerousTiles.Add(coordinates);
     }
@@ -88,7 +88,7 @@ public class Map : MonoBehaviour
 
     public void InstantiateNinja(int playerNumber, SpawnPoint spawnPoint)
     {
-        Ninja ninja = Instantiate(ninjaPrefab);
+        Ninja ninja = Instantiate(ninjaPrefab, transform);
         ninja.Initialize(spawnPoint, playerNumber, this);
         Ninjas.Add(ninja);
     }
