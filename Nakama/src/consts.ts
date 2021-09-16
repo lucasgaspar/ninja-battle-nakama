@@ -14,4 +14,4 @@ const MessagesLogic: { [opCode: number]: (message: nkruntime.MatchMessage, state
     4: playerWon
 }
 
-const MessagesToSendBack: OperationCode[] = [OperationCode.PlayerInput];
+const MessagesToSendBack: OperationCode[] = [];
