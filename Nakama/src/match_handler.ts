@@ -174,17 +174,14 @@ function playerWon(message: nkruntime.MatchMessage, gameState: GameState, dispat
     if (gameState.scene != Scene.Game)
         return;
 
-    for (let playerNumber = 0; playerNumber < gameState.players.length; playerNumber++)
-    {
-        let player: Player = gameState.players[playerNumber];
-        if (player.presence.sessionId != message.sender.sessionId)
-            continue;
+    let playerNumber: number = getPlayerNumber(gameState.players, message.sender.sessionId);
+    if (playerNumber == PlayerNotFound)
+        return;
 
-        player.wins++;
-        gameState.countdown = DurationRoundResults * TickRate;
-        dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
-        break;
-    }
+    let player: Player = gameState.players[playerNumber];
+    player.wins++;
+    gameState.countdown = DurationRoundResults * TickRate;
+    dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
 }
 
 function getPlayersCount(players: Player[]): number
