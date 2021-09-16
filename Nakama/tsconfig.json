@@ -1,0 +1,21 @@
+{
+  "files": [
+    "./src/main.ts",
+    "./src/rpcs.ts",
+    "./src/match_handler.ts",
+    "./src/interfaces.ts",
+    "./src/enums.ts",
+    "./src/consts.ts"
+  ],
+  "compilerOptions": {
+    "target": "es5",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outFile": "./modules/index.js",
+    "typeRoots": [
+      "./node_modules"
+    ]
+  }
+}

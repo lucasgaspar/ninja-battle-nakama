@@ -1,0 +1,44 @@
+version: '3'
+services:
+  cockroachdb:
+    image: cockroachdb/cockroach:latest-v20.2
+    command: start-single-node --insecure --store=attrs=ssd,path=/var/lib/cockroach2/
+    restart: "no"
+    volumes:
+      - data:/var/lib/cockroach2
+    expose:
+      - "8081"
+      - "26258"
+    ports:
+      - "26258:26258"
+      - "8081:8081"
+  nakama:
+    image: heroiclabs/nakama:3.6.0
+    entrypoint:
+      - "/bin/sh"
+      - "-ecx"
+      - >
+          /nakama/nakama migrate up --database.address root@cockroachdb:26258 &&
+          exec /nakama/nakama --name nakama2 --database.address root@cockroachdb:26258 --logger.level DEBUG --session.token_expiry_sec 7200
+    restart: "no"
+    links:
+      - "cockroachdb:db"
+    depends_on:
+      - cockroachdb
+    volumes:
+      - ./:/nakama/data2
+    expose:
+      - "7352"
+      - "7353"
+      - "7354"
+    ports:
+      - "7352:7352"
+      - "7353:7353"
+      - "7354:7354"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7353/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  data:
