@@ -12,12 +12,18 @@ namespace Nakama.Helpers
 
         #region PROPERTIES
 
+        public static NakamaUserManager Instance { get; private set; } = null;
         public bool LoadingFinished { get; private set; } = false;
         public string DisplayName { get => account.User.DisplayName; }
 
         #endregion
 
         #region BEHAVIORS
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         private void Start()
         {

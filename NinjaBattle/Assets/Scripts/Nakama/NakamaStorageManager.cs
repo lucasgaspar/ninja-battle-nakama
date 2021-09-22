@@ -21,11 +21,17 @@ namespace Nakama.Helpers
 
         #region PROPERTIES
 
+        public static NakamaStorageManager Instance { get; private set; } = null;
         public bool LoadingFinished { get; private set; } = false;
 
         #endregion
 
         #region BEHAVIORS
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         private void Start()
         {
