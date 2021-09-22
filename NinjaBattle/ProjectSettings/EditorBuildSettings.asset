@@ -6,6 +6,21 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/0-Splash.unity
+    guid: 79f2ea3a7c17c47e0a39d082ba969c0c
+  - enabled: 1
+    path: Assets/Scenes/1-Home.unity
+    guid: 630a18685b7344f51832550d84a433ca
+  - enabled: 1
+    path: Assets/Scenes/2-Lobby.unity
+    guid: a538d35a4a2f04edaa9e34a3e959523f
+  - enabled: 1
     path: Assets/Scenes/3-Battle.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/4-RoundResults.unity
+    guid: 3cf62300abade454889442d1399781a3
+  - enabled: 1
+    path: Assets/Scenes/5-FinalResults.unity
+    guid: ff23d595e25c34398a74395377b2ed24
   m_configObjects: {}

@@ -238,7 +238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 1
-  delay: 0
+  delay: 2
   keyUp: 273
   keyLeft: 276
   keyRight: 275
