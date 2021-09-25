@@ -9,9 +9,8 @@ const enum Scene
 const enum OperationCode
 {
     Players = 0,
-    PlayerJoined = 1,
-    PlayerLeft = 2,
-    PlayerInput = 3,
-    PlayerWon = 4,
-    Time = 5
+    PlayerInput = 1,
+    PlayerWon = 2,
+    Time = 3,
+    ChangeScene = 4
 }

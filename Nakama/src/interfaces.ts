@@ -5,21 +5,11 @@ interface MatchLabel
 
 interface GameState
 {
-    players: Player[]
+    players: nkruntime.Presence[]
+    playersWins: number[]
     scene: Scene
     countdown: number
     endMatch: boolean
-}
-
-interface Player
-{
-    presence: nkruntime.Presence
-    wins: number
-}
-
-interface PlayerLeaveData
-{
-    sessionId: string
 }
 
 interface TimeRemainingData
