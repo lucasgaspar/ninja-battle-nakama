@@ -619,6 +619,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Managers
       objectReference: {fileID: 0}
+    - target: {fileID: 33490677359399838, guid: e0ee0c55fdfa24e1b8eef4f0b0e135b5, type: 3}
+      propertyPath: enableLog
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0ee0c55fdfa24e1b8eef4f0b0e135b5, type: 3}
 --- !u!1001 &9167120001878863892

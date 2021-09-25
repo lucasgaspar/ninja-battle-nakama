@@ -11,7 +11,7 @@
 
         #region PROPERTIES
 
-        public MultiplayerManager.DataCodes DataCode { get; private set; }
+        public MultiplayerManager.Code DataCode { get; private set; }
         public string SessionId { get; private set; }
         public string UserId { get; private set; }
         public string Username { get; private set; }
@@ -22,7 +22,7 @@
 
         public MultiplayerMessage(IMatchState matchState)
         {
-            DataCode = (MultiplayerManager.DataCodes)matchState.OpCode;
+            DataCode = (MultiplayerManager.Code)matchState.OpCode;
             if (matchState.UserPresence != null)
             {
                 UserId = matchState.UserPresence.UserId;

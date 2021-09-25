@@ -324,9 +324,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3929011327487655054, guid: b8bee1fddf1874bcabd749826215736e, type: 3}
+      propertyPath: scene
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 9167120001445568131, guid: b8bee1fddf1874bcabd749826215736e, type: 3}
       propertyPath: m_Name
-      value: SceneChanger
+      value: ChangeSceneOnLogin
       objectReference: {fileID: 0}
     - target: {fileID: 9167120001445568140, guid: b8bee1fddf1874bcabd749826215736e, type: 3}
       propertyPath: m_RootOrder
@@ -374,6 +378,61 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8bee1fddf1874bcabd749826215736e, type: 3}
+--- !u!1 &1520398431 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9167120001445568131, guid: b8bee1fddf1874bcabd749826215736e, type: 3}
+  m_PrefabInstance: {fileID: 1520398430}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1520398432 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3929011327487655054, guid: b8bee1fddf1874bcabd749826215736e, type: 3}
+  m_PrefabInstance: {fileID: 1520398430}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1520398431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16a29bb9f6cc4429a85e0dc6cb7c7998, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1520398433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1520398431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1349badc6d3649989d6d02184ae4f7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onConnecting:
+    m_PersistentCalls:
+      m_Calls: []
+  onConnected:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1520398432}
+        m_TargetAssemblyTypeName: NinjaBattle.General.SceneChanger, Assembly-CSharp
+        m_MethodName: ChangeScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onDisconnected:
+    m_PersistentCalls:
+      m_Calls: []
+  onLoginSuccess:
+    m_PersistentCalls:
+      m_Calls: []
+  onLoginFail:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1721872448
 GameObject:
   m_ObjectHideFlags: 0

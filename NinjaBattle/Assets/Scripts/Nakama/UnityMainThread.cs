@@ -18,7 +18,6 @@ namespace Nakama.Helpers
         private void Awake()
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
         }
 
         private void Update()

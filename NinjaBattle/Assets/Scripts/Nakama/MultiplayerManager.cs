@@ -17,7 +17,7 @@ namespace Nakama.Helpers
 
         [SerializeField] private bool enableLog = false;
 
-        private Dictionary<DataCodes, Action<MultiplayerMessage>> onReceiveData = new Dictionary<DataCodes, Action<MultiplayerMessage>>();
+        private Dictionary<Code, Action<MultiplayerMessage>> onReceiveData = new Dictionary<Code, Action<MultiplayerMessage>>();
         private IMatch match = null;
 
         #endregion
@@ -85,7 +85,7 @@ namespace Nakama.Helpers
             UnityMainThread.AddJob(() => onMatchLeave?.Invoke());
         }
 
-        public void Send(DataCodes code, object data = null)
+        public void Send(Code code, object data = null)
         {
             if (match == null)
                 return;
@@ -97,7 +97,7 @@ namespace Nakama.Helpers
             NakamaManager.Instance.Socket.SendMatchStateAsync(match.Id, (long)code, json);
         }
 
-        public void Send(DataCodes code, byte[] bytes)
+        public void Send(Code code, byte[] bytes)
         {
             if (match == null)
                 return;
@@ -125,7 +125,7 @@ namespace Nakama.Helpers
             });
         }
 
-        public void Subscribe(DataCodes code, Action<MultiplayerMessage> action)
+        public void Subscribe(Code code, Action<MultiplayerMessage> action)
         {
             if (!onReceiveData.ContainsKey(code))
                 onReceiveData.Add(code, null);
@@ -133,7 +133,7 @@ namespace Nakama.Helpers
             onReceiveData[code] += action;
         }
 
-        public void Unsubscribe(DataCodes code, Action<MultiplayerMessage> action)
+        public void Unsubscribe(Code code, Action<MultiplayerMessage> action)
         {
             if (onReceiveData.ContainsKey(code))
                 onReceiveData[code] -= action;
@@ -141,7 +141,7 @@ namespace Nakama.Helpers
 
         private void LogData(string description, long dataCode, string json)
         {
-            Debug.Log(string.Format(LogFormat, description, (DataCodes)dataCode, json));
+            Debug.Log(string.Format(LogFormat, description, (Code)dataCode, json));
         }
 
         #endregion
