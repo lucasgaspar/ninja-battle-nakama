@@ -13,7 +13,7 @@ namespace Nakama.Helpers
 
         #region BEHAVIORS
 
-        private void Awake()
+        private void Start()
         {
             NakamaManager.Instance.onDisconnected += Disconnected;
         }

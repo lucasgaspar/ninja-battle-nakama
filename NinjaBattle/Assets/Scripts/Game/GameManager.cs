@@ -1,6 +1,9 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
+using Nakama.Helpers;
+
+using NinjaBattle.General;
 
 namespace NinjaBattle.Game
 {
@@ -8,27 +11,10 @@ namespace NinjaBattle.Game
     {
         #region FIELDS
 
-        private const float TickRate = 4f;
-
-        [SerializeField] private List<MapData> maps = null;
-        [SerializeField] private List<string> players = new List<string>();
-        [SerializeField] private Map map = null;
-
-        private MapData currentMap = null;
-
-        #endregion
-
-        #region EVENTS
-
-        public event Action<int> onTick = null;
-        public event Action<int> onRewind = null;
-
         #endregion
 
         #region PROPERTIES
 
-        public float TickDuration { get => 1 / TickRate; }
-        public int CurrentTick { get; private set; }
         public static GameManager Instance { get; private set; }
 
         #endregion
@@ -42,42 +28,32 @@ namespace NinjaBattle.Game
 
         private void Start()
         {
-            Initialize(players.Count);
-            StartGame();
+            MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.PlayerWon, ReceivedPlayerWonRound);
+            MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.ChangeScene, ReceivedChangeScene);
+            MultiplayerManager.Instance.onMatchLeave += GoToHome;
         }
 
-        private void Initialize(int playersAmount)
+        private void OnDestroy()
         {
-            List<MapData> possibleMaps = maps.FindAll(map => playersAmount >= map.MinimumPlayers && playersAmount <= map.MaximumPlayers);
-            currentMap = possibleMaps[UnityEngine.Random.Range(0, possibleMaps.Count)];
-            map.Initialize(currentMap, players);
+            MultiplayerManager.Instance.Unsubscribe(MultiplayerManager.Code.PlayerWon, ReceivedPlayerWonRound);
+            MultiplayerManager.Instance.Unsubscribe(MultiplayerManager.Code.PlayerInput, ReceivedChangeScene);
+            MultiplayerManager.Instance.onMatchLeave -= GoToHome;
         }
 
-        private void StartGame()
+        private void ReceivedPlayerWonRound(MultiplayerMessage message)
         {
-            InvokeRepeating(nameof(ProcessTick), TickDuration, TickDuration);
+            PlayerWonData playerWonData = message.GetData<PlayerWonData>();
         }
 
-        private void ProcessTick()
+
+        private void ReceivedChangeScene(MultiplayerMessage message)
         {
-            onTick?.Invoke(CurrentTick);
-            CurrentTick++;
+            SceneManager.LoadScene(message.GetData<int>());
         }
 
-        public void SetPlayerInput(int playerNumber, int tick, Direction direction)
+        private void GoToHome()
         {
-            if (tick <= default(int))
-                return;
-
-            map.GetNinja(playerNumber).SetInput(direction, tick);
-            if (tick < CurrentTick)
-                onRewind?.Invoke(tick);
-
-            while (tick < CurrentTick)
-            {
-                onTick?.Invoke(tick);
-                tick++;
-            }
+            SceneManager.LoadScene((int)Scenes.Home);
         }
 
         #endregion

@@ -26,7 +26,9 @@ var matchInit = function (context, logger, nakama, params) {
     var gameState = {
         players: [],
         playersWins: [],
-        scene: 0 /* Lobby */,
+        roundDeclaredWins: [[]],
+        roundDeclaredDraw: [],
+        scene: 3 /* Lobby */,
         countdown: DurationLobby * TickRate,
         endMatch: false
     };
@@ -40,12 +42,12 @@ var matchJoinAttempt = function (context, logger, nakama, dispatcher, tick, stat
     var gameState = state;
     return {
         state: gameState,
-        accept: gameState.scene == 0 /* Lobby */,
+        accept: gameState.scene == 3 /* Lobby */,
     };
 };
 var matchJoin = function (context, logger, nakama, dispatcher, tick, state, presences) {
     var gameState = state;
-    if (gameState.scene != 0 /* Lobby */)
+    if (gameState.scene != 3 /* Lobby */)
         return { state: gameState };
     for (var _i = 0, presences_1 = presences; _i < presences_1.length; _i++) {
         var presence = presences_1[_i];
@@ -55,8 +57,6 @@ var matchJoin = function (context, logger, nakama, dispatcher, tick, state, pres
     }
     dispatcher.broadcastMessage(0 /* Players */, JSON.stringify(gameState.players), presences);
     gameState.countdown = DurationLobby * TickRate;
-    var data = { time: gameState.countdown / TickRate };
-    dispatcher.broadcastMessage(3 /* Time */, JSON.stringify(data));
     return { state: gameState };
 };
 var matchLoop = function (context, logger, nakama, dispatcher, tick, state, messages) {
@@ -105,22 +105,19 @@ function messagesDefaultLogic(message, gameState, dispatcher) {
 }
 function processMatchLoop(gameState, nakama, dispatcher, logger) {
     switch (gameState.scene) {
-        case 0 /* Lobby */:
+        case 3 /* Lobby */:
             matchLoopLobby(gameState, nakama, dispatcher);
             break;
-        case 2 /* RoundResults */:
+        case 5 /* RoundResults */:
             matchLoopRoundResults(gameState, nakama, dispatcher);
-            break;
-        case 3 /* FinalResults */:
-            matchLoopFinalResults(gameState, nakama, dispatcher);
             break;
     }
 }
 function matchLoopLobby(gameState, nakama, dispatcher) {
-    if (gameState.countdown > 0) {
+    if (gameState.countdown > 0 /* && getPlayersCount(gameState.players) > 0*/) {
         gameState.countdown--;
         if (gameState.countdown == 0) {
-            gameState.scene = 1 /* Game */;
+            gameState.scene = 4 /* Battle */;
             dispatcher.broadcastMessage(4 /* ChangeScene */, JSON.stringify(gameState.scene));
             dispatcher.matchLabelUpdate(JSON.stringify({ open: false }));
         }
@@ -131,33 +128,52 @@ function matchLoopRoundResults(gameState, nakama, dispatcher) {
         gameState.countdown--;
         if (gameState.countdown == 0) {
             if (playerObtainedNecessaryWins(gameState.playersWins)) {
-                gameState.countdown = DurationFinalResults * TickRate;
-                gameState.scene = 3 /* FinalResults */;
-                dispatcher.broadcastMessage(4 /* ChangeScene */, JSON.stringify(gameState.scene));
+                gameState.endMatch = true;
+                gameState.scene = 6 /* FinalResults */;
             }
             else {
-                gameState.scene = 1 /* Game */;
-                dispatcher.broadcastMessage(4 /* ChangeScene */, JSON.stringify(gameState.scene));
+                gameState.scene = 4 /* Battle */;
             }
-        }
-    }
-}
-function matchLoopFinalResults(gameState, nakama, dispatcher) {
-    if (gameState.countdown > 0) {
-        gameState.countdown--;
-        if (gameState.countdown == 0) {
-            gameState.endMatch = true;
+            dispatcher.broadcastMessage(4 /* ChangeScene */, JSON.stringify(gameState.scene));
         }
     }
 }
 function playerWon(message, gameState, dispatcher) {
-    if (gameState.scene != 1 /* Game */)
+    if (gameState.scene != 4 /* Battle */)
         return;
-    var playerNumber = getPlayerNumber(gameState.players, message.sender.sessionId);
-    if (playerNumber == PlayerNotFound)
+    var data = JSON.parse(message.data);
+    var tick = data.tick;
+    var playerNumber = data.playerNumber;
+    if (gameState.roundDeclaredWins[tick] == undefined)
+        gameState.roundDeclaredWins[tick] = [];
+    if (gameState.roundDeclaredWins[tick][playerNumber] == undefined)
+        gameState.roundDeclaredWins[tick][playerNumber] = 0;
+    gameState.roundDeclaredWins[tick][playerNumber]++;
+    if (gameState.roundDeclaredWins[tick][playerNumber] < getPlayersCount(gameState.players))
         return;
+    gameState.roundDeclaredWins = [];
+    gameState.roundDeclaredDraw = [];
     gameState.playersWins[playerNumber]++;
     gameState.countdown = DurationRoundResults * TickRate;
+    gameState.scene = 5 /* RoundResults */;
+    dispatcher.broadcastMessage(4 /* ChangeScene */, JSON.stringify(gameState.scene));
+    dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
+}
+function draw(message, gameState, dispatcher) {
+    if (gameState.scene != 4 /* Battle */)
+        return;
+    var data = JSON.parse(message.data);
+    var tick = data.tick;
+    if (gameState.roundDeclaredDraw[tick] == undefined)
+        gameState.roundDeclaredDraw[tick] = 0;
+    gameState.roundDeclaredDraw[tick]++;
+    if (gameState.roundDeclaredDraw[tick] < getPlayersCount(gameState.players))
+        return;
+    gameState.roundDeclaredWins = [];
+    gameState.roundDeclaredDraw = [];
+    gameState.countdown = DurationRoundResults * TickRate;
+    gameState.scene = 5 /* RoundResults */;
+    dispatcher.broadcastMessage(4 /* ChangeScene */, JSON.stringify(gameState.scene));
     dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
 }
 function getPlayersCount(players) {
@@ -192,13 +208,13 @@ var JoinOrCreateMatchRpc = "JoinOrCreateMatchRpc";
 var LogicLoadedLoggerInfo = "Custom logic loaded.";
 var MatchModuleName = "match";
 var TickRate = 4;
-var DurationLobby = 10;
+var DurationLobby = 5;
 var DurationRoundResults = 5;
-var DurationFinalResults = 5;
 var NecessaryWins = 3;
 var MaxPlayers = 4;
 var PlayerNotFound = -1;
 var MessagesLogic = {
-    4: playerWon
+    2: playerWon,
+    3: draw
 };
 var MessagesToSendBack = [];

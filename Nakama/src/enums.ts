@@ -1,9 +1,12 @@
 const enum Scene
 {
-    Lobby,
-    Game,
-    RoundResults,
-    FinalResults
+    Initializer = 0,
+    Splash = 1,
+    Home = 2,
+    Lobby = 3,
+    Battle = 4,
+    RoundResults = 5,
+    FinalResults = 6
 }
 
 const enum OperationCode
@@ -11,6 +14,6 @@ const enum OperationCode
     Players = 0,
     PlayerInput = 1,
     PlayerWon = 2,
-    Time = 3,
+    Draw = 3,
     ChangeScene = 4
 }

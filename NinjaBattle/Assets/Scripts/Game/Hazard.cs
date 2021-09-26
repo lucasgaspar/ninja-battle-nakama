@@ -33,12 +33,12 @@ namespace NinjaBattle.Game
             Coordinates = coordinates;
             wasCreated[default(int)] = false;
             wasCreated[tick] = true;
-            GameManager.Instance.onRewind += Rewind;
+            BattleManager.Instance.onRewind += Rewind;
         }
 
         private void OnDestroy()
         {
-            GameManager.Instance.onRewind -= Rewind;
+            BattleManager.Instance.onRewind -= Rewind;
         }
 
         private void Rewind(int tick)

@@ -19,7 +19,7 @@ namespace NinjaBattle.Game
 
         private void Update()
         {
-            GameManager gameManager = GameManager.Instance;
+            BattleManager gameManager = BattleManager.Instance;
             if (Input.GetKeyDown(keyUp))
                 gameManager.SetPlayerInput(playerNumber, gameManager.CurrentTick - delay, Direction.North);
             else if (Input.GetKeyDown(keyLeft))

@@ -37,8 +37,8 @@ namespace NinjaBattle.Game
             this.map = map;
             spriteRenderer.transform.position = ((Vector3Int)currentCoordinates);
             spriteRenderer.color = ninjaColors[playerNumber];
-            GameManager.Instance.onTick += ProcessTick;
-            GameManager.Instance.onRewind += Rewind;
+            BattleManager.Instance.onTick += ProcessTick;
+            BattleManager.Instance.onRewind += Rewind;
             isJumping[0] = false;
             IsAlive[0] = true;
             positions[0] = currentCoordinates;
@@ -47,8 +47,8 @@ namespace NinjaBattle.Game
 
         private void OnDestroy()
         {
-            GameManager.Instance.onTick -= ProcessTick;
-            GameManager.Instance.onRewind -= Rewind;
+            BattleManager.Instance.onTick -= ProcessTick;
+            BattleManager.Instance.onRewind -= Rewind;
         }
 
         public void SetInput(Direction direction, int tick)

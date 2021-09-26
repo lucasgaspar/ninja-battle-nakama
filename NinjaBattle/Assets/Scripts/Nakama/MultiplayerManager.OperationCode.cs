@@ -7,7 +7,7 @@ namespace Nakama.Helpers
             Players = 0,
             PlayerInput = 1,
             PlayerWon = 2,
-            Time = 3,
+            Draw = 3,
             ChangeScene = 4
         }
     }

@@ -5,6 +5,8 @@ let matchInit: nkruntime.MatchInitFunction = function (context: nkruntime.Contex
     {
         players: [],
         playersWins: [],
+        roundDeclaredWins: [[]],
+        roundDeclaredDraw: [],
         scene: Scene.Lobby,
         countdown: DurationLobby * TickRate,
         endMatch: false
@@ -41,8 +43,6 @@ let matchJoin: nkruntime.MatchJoinFunction = function (context: nkruntime.Contex
 
     dispatcher.broadcastMessage(OperationCode.Players, JSON.stringify(gameState.players), presences);
     gameState.countdown = DurationLobby * TickRate;
-    let data: TimeRemainingData = { time: gameState.countdown / TickRate };
-    dispatcher.broadcastMessage(OperationCode.Time, JSON.stringify(data));
     return { state: gameState };
 }
 
@@ -101,6 +101,7 @@ function messagesDefaultLogic(message: nkruntime.MatchMessage, gameState: GameSt
             if (player != undefined && player.sessionId != message.sender.sessionId)
                 otherPlayers.push(player);
         });
+
         dispatcher.broadcastMessage(message.opCode, message.data, otherPlayers, message.sender);
     }
 }
@@ -111,18 +112,17 @@ function processMatchLoop(gameState: GameState, nakama: nkruntime.Nakama, dispat
     {
         case Scene.Lobby: matchLoopLobby(gameState, nakama, dispatcher); break;
         case Scene.RoundResults: matchLoopRoundResults(gameState, nakama, dispatcher); break;
-        case Scene.FinalResults: matchLoopFinalResults(gameState, nakama, dispatcher); break;
     }
 }
 
 function matchLoopLobby(gameState: GameState, nakama: nkruntime.Nakama, dispatcher: nkruntime.MatchDispatcher): void
 {
-    if (gameState.countdown > 0 && getPlayersCount(gameState.players) > 0)
+    if (gameState.countdown > 0/* && getPlayersCount(gameState.players) > 0*/)
     {
         gameState.countdown--;
         if (gameState.countdown == 0)
         {
-            gameState.scene = Scene.Game;
+            gameState.scene = Scene.Battle;
             dispatcher.broadcastMessage(OperationCode.ChangeScene, JSON.stringify(gameState.scene));
             dispatcher.matchLabelUpdate(JSON.stringify({ open: false }));
         }
@@ -138,42 +138,65 @@ function matchLoopRoundResults(gameState: GameState, nakama: nkruntime.Nakama, d
         {
             if (playerObtainedNecessaryWins(gameState.playersWins))
             {
-                gameState.countdown = DurationFinalResults * TickRate;
+                gameState.endMatch = true;
                 gameState.scene = Scene.FinalResults;
-                dispatcher.broadcastMessage(OperationCode.ChangeScene, JSON.stringify(gameState.scene));
             }
             else
             {
-                gameState.scene = Scene.Game;
-                dispatcher.broadcastMessage(OperationCode.ChangeScene, JSON.stringify(gameState.scene));
+                gameState.scene = Scene.Battle;
             }
-        }
-    }
-}
 
-function matchLoopFinalResults(gameState: GameState, nakama: nkruntime.Nakama, dispatcher: nkruntime.MatchDispatcher): void
-{
-    if (gameState.countdown > 0)
-    {
-        gameState.countdown--;
-        if (gameState.countdown == 0)
-        {
-            gameState.endMatch = true;
+            dispatcher.broadcastMessage(OperationCode.ChangeScene, JSON.stringify(gameState.scene));
         }
     }
 }
 
 function playerWon(message: nkruntime.MatchMessage, gameState: GameState, dispatcher: nkruntime.MatchDispatcher): void 
 {
-    if (gameState.scene != Scene.Game)
+    if (gameState.scene != Scene.Battle)
         return;
 
-    let playerNumber: number = getPlayerNumber(gameState.players, message.sender.sessionId);
-    if (playerNumber == PlayerNotFound)
+    let data: PlayerWonData = JSON.parse(message.data);
+    let tick: number = data.tick;
+    let playerNumber: number = data.playerNumber;
+    if (gameState.roundDeclaredWins[tick] == undefined)
+        gameState.roundDeclaredWins[tick] = [];
+
+    if (gameState.roundDeclaredWins[tick][playerNumber] == undefined)
+        gameState.roundDeclaredWins[tick][playerNumber] = 0;
+
+    gameState.roundDeclaredWins[tick][playerNumber]++;
+    if (gameState.roundDeclaredWins[tick][playerNumber] < getPlayersCount(gameState.players))
         return;
 
+    gameState.roundDeclaredWins = [];
+    gameState.roundDeclaredDraw = [];
     gameState.playersWins[playerNumber]++;
     gameState.countdown = DurationRoundResults * TickRate;
+    gameState.scene = Scene.RoundResults;
+    dispatcher.broadcastMessage(OperationCode.ChangeScene, JSON.stringify(gameState.scene));
+    dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
+}
+
+function draw(message: nkruntime.MatchMessage, gameState: GameState, dispatcher: nkruntime.MatchDispatcher): void
+{
+    if (gameState.scene != Scene.Battle)
+        return;
+
+    let data: DrawData = JSON.parse(message.data);
+    let tick: number = data.tick;
+    if (gameState.roundDeclaredDraw[tick] == undefined)
+        gameState.roundDeclaredDraw[tick] = 0;
+
+    gameState.roundDeclaredDraw[tick]++;
+    if (gameState.roundDeclaredDraw[tick] < getPlayersCount(gameState.players))
+        return;
+
+    gameState.roundDeclaredWins = [];
+    gameState.roundDeclaredDraw = [];
+    gameState.countdown = DurationRoundResults * TickRate;
+    gameState.scene = Scene.RoundResults;
+    dispatcher.broadcastMessage(OperationCode.ChangeScene, JSON.stringify(gameState.scene));
     dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
 }
 
