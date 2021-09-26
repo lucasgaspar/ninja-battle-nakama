@@ -6,6 +6,8 @@ namespace NinjaBattle.Game
     [CreateAssetMenu(fileName = "MapData")]
     public class MapData : ScriptableObject
     {
+        #region FIELDS
+
         [SerializeField] private int width = default(int);
         [SerializeField] private int height = default(int);
         [SerializeField] private List<Vector2Int> walls = new List<Vector2Int>();
@@ -14,6 +16,10 @@ namespace NinjaBattle.Game
         [SerializeField] private int minimumPlayers = default(int);
         [SerializeField] private int maximumPlayers = default(int);
 
+        #endregion
+
+        #region PROPERTIES
+
         public int Width { get => width; }
         public int Height { get => height; }
         public List<Vector2Int> Walls { get => walls; }
@@ -21,5 +27,7 @@ namespace NinjaBattle.Game
         public List<SpawnPoint> SpawnPoints { get => spawnPoints; }
         public int MinimumPlayers { get => minimumPlayers; }
         public int MaximumPlayers { get => maximumPlayers; }
+
+        #endregion
     }
 }

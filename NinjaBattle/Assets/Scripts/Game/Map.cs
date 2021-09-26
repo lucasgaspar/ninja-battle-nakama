@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,6 +6,8 @@ namespace NinjaBattle.Game
 {
     public class Map : MonoBehaviour
     {
+        #region FIELDS
+
         [SerializeField] private Hazard hazardPrefab = null;
         [SerializeField] private GameObject waterPrefab = null;
         [SerializeField] private GameObject wallPrefab = null;
@@ -14,7 +17,15 @@ namespace NinjaBattle.Game
         private List<Vector2Int> mapDangerousTiles = new List<Vector2Int>();
         private List<Vector2Int> ninjaDangerousTiles = new List<Vector2Int>();
 
+        #endregion
+
+        #region PROPERTIES
+
         public List<Ninja> Ninjas { get; private set; } = new List<Ninja>();
+
+        #endregion
+
+        #region BEHAVIORS
 
         public void Initialize(MapData mapData, List<string> players)
         {
@@ -99,5 +110,7 @@ namespace NinjaBattle.Game
         {
             return Ninjas[playerNumber];
         }
+
+        #endregion
     }
 }

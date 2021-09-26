@@ -6,6 +6,8 @@ namespace NinjaBattle.Game
 {
     public class GameManager : MonoBehaviour
     {
+        #region FIELDS
+
         private const float TickRate = 4f;
 
         [SerializeField] private List<MapData> maps = null;
@@ -14,12 +16,24 @@ namespace NinjaBattle.Game
 
         private MapData currentMap = null;
 
+        #endregion
+
+        #region EVENTS
+
         public event Action<int> onTick = null;
         public event Action<int> onRewind = null;
+
+        #endregion
+
+        #region PROPERTIES
 
         public float TickDuration { get => 1 / TickRate; }
         public int CurrentTick { get; private set; }
         public static GameManager Instance { get; private set; }
+
+        #endregion
+
+        #region BEHAVIORS
 
         private void Awake()
         {
@@ -65,5 +79,7 @@ namespace NinjaBattle.Game
                 tick++;
             }
         }
+
+        #endregion
     }
 }

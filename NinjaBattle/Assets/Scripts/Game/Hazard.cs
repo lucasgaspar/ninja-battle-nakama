@@ -4,11 +4,21 @@ namespace NinjaBattle.Game
 {
     public class Hazard : MonoBehaviour
     {
+        #region FIELDS
+
         private RollbackVar<bool> wasCreated = new RollbackVar<bool>();
         private SpriteRenderer spriteRenderer = null;
         private Map map = null;
 
+        #endregion
+
+        #region PROPERTIES
+
         public Vector2Int Coordinates { get; private set; } = new Vector2Int();
+
+        #endregion
+
+        #region BEHAVIORS
 
         private void Awake()
         {
@@ -40,5 +50,7 @@ namespace NinjaBattle.Game
             map.RemoveHazard(this);
             Destroy(this.gameObject);
         }
+
+        #endregion
     }
 }

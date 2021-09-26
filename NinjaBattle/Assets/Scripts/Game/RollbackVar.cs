@@ -4,7 +4,13 @@ namespace NinjaBattle.Game
 {
     public class RollbackVar<T>
     {
+        #region FIELDS
+
         private Dictionary<int, T> history = new Dictionary<int, T>();
+
+        #endregion
+
+        #region PROPERTIES
 
         public T this[int tick]
         {
@@ -21,6 +27,10 @@ namespace NinjaBattle.Game
                     history.Add(tick, value);
             }
         }
+
+        #endregion
+
+        #region BEHAVIORS
 
         public bool HasValue(int tick)
         {
@@ -46,5 +56,7 @@ namespace NinjaBattle.Game
             foreach (int i in keysToErase)
                 history.Remove(i);
         }
+
+        #endregion
     }
 }

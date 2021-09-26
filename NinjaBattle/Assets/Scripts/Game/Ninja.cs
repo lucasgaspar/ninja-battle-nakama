@@ -5,6 +5,8 @@ namespace NinjaBattle.Game
 {
     public class Ninja : MonoBehaviour
     {
+        #region FIELDS
+
         [SerializeField] private SpriteRenderer spriteRenderer = null;
         [SerializeField] private List<Color> ninjaColors = new List<Color>();
 
@@ -15,8 +17,17 @@ namespace NinjaBattle.Game
         private Vector2Int desiredCoordinates = new Vector2Int();
         private Vector2Int currentCoordinates = new Vector2Int();
         private RollbackVar<bool> isJumping = new RollbackVar<bool>();
-        private RollbackVar<bool> isDead = new RollbackVar<bool>();
         private Map map = null;
+
+        #endregion
+
+        #region PROPERTIES
+
+        public RollbackVar<bool> IsAlive { get; private set; } = new RollbackVar<bool>();
+
+        #endregion
+
+        #region BEHAVIORS
 
         public void Initialize(SpawnPoint spawnPoint, int playerNumber, Map map)
         {
@@ -29,7 +40,7 @@ namespace NinjaBattle.Game
             GameManager.Instance.onTick += ProcessTick;
             GameManager.Instance.onRewind += Rewind;
             isJumping[0] = false;
-            isDead[0] = false;
+            IsAlive[0] = true;
             positions[0] = currentCoordinates;
             directions[0] = currentDirection;
         }
@@ -50,7 +61,7 @@ namespace NinjaBattle.Game
 
         public void ProcessTick(int tick)
         {
-            if (isDead.GetLastValue(tick))
+            if (!IsAlive.GetLastValue(tick))
                 return;
 
             if (!isJumping.GetLastValue(tick))
@@ -114,7 +125,7 @@ namespace NinjaBattle.Game
 
             isJumping.EraseFuture(tick);
             spriteRenderer.transform.localScale = Vector3.one * (isJumping[tick] ? 0.6f : 0.4f);
-            isDead.EraseFuture(tick);
+            IsAlive.EraseFuture(tick);
         }
 
         private void JumpStart(int tick)
@@ -131,7 +142,9 @@ namespace NinjaBattle.Game
 
         private void KillNinja(int tick)
         {
-            isDead[tick] = true;
+            IsAlive[tick] = false;
         }
+
+        #endregion
     }
 }
