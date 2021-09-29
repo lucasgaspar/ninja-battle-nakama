@@ -12,6 +12,7 @@ namespace NinjaBattle.Game
         #region FIELDS
 
         private MultiplayerManager multiplayerManager = null;
+        private bool blockJoinsAndLeaves = false;
 
         #endregion
 
@@ -25,7 +26,10 @@ namespace NinjaBattle.Game
 
         #region PROPERTIES
 
-        public List<IUserPresence> Players { get; private set; }
+        public static PlayersManager Instance { get; private set; } = null;
+        public List<IUserPresence> Players { get; private set; } = new List<IUserPresence>();
+        public IUserPresence CurrentPlayer { get; private set; } = null;
+        public int CurrentPlayerNumber { get; private set; } = 0;
 
         #endregion
 
@@ -33,31 +37,39 @@ namespace NinjaBattle.Game
 
         private void Awake()
         {
-            multiplayerManager = MultiplayerManager.Instance;
+            Instance = this;
         }
 
         private void Start()
         {
-            NakamaManager.Instance.Socket.ReceivedMatchPresence += PlayersChanged;
-            multiplayerManager.Subscribe(MultiplayerManager.Code.Players, SetPlayers);
+            multiplayerManager = MultiplayerManager.Instance;
+            multiplayerManager.onMatchJoin += ResetPlayersData;
             multiplayerManager.onMatchLeave += ResetPlayersData;
+            multiplayerManager.Subscribe(MultiplayerManager.Code.Players, SetPlayers);
+            multiplayerManager.Subscribe(MultiplayerManager.Code.ChangeScene, MatchStarted);
         }
 
         private void OnDestroy()
         {
-            NakamaManager.Instance.Socket.ReceivedMatchPresence -= PlayersChanged;
-            multiplayerManager.Unsubscribe(MultiplayerManager.Code.Players, SetPlayers);
+            multiplayerManager.onMatchJoin -= ResetPlayersData;
             multiplayerManager.onMatchLeave -= ResetPlayersData;
+            multiplayerManager.Unsubscribe(MultiplayerManager.Code.Players, SetPlayers);
+            multiplayerManager.Unsubscribe(MultiplayerManager.Code.ChangeScene, MatchStarted);
         }
 
         private void SetPlayers(MultiplayerMessage message)
         {
             Players = message.GetData<List<IUserPresence>>();
             onPlayersReceived?.Invoke(Players);
+            CurrentPlayer = Players.Find(player => player.SessionId == multiplayerManager.Self.SessionId);
+            CurrentPlayerNumber = Players.IndexOf(CurrentPlayer);
         }
 
         private void PlayersChanged(IMatchPresenceEvent matchPresenceEvent)
         {
+            if (blockJoinsAndLeaves)
+                return;
+
             foreach (IUserPresence userPresence in matchPresenceEvent.Leaves)
             {
                 Players.ForEach(presence =>
@@ -83,7 +95,13 @@ namespace NinjaBattle.Game
 
         private void ResetPlayersData()
         {
+            blockJoinsAndLeaves = false;
             Players = null;
+        }
+
+        public void MatchStarted(MultiplayerMessage message)
+        {
+            blockJoinsAndLeaves = true;
         }
 
         #endregion

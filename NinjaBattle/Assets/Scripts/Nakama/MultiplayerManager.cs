@@ -63,8 +63,6 @@ namespace Nakama.Helpers
             IApiRpc rpcResult = await NakamaManager.Instance.SendRPC(JoinOrCreateMatchRpc);
             string matchId = rpcResult.Payload;
             match = await NakamaManager.Instance.Socket.JoinMatchAsync(matchId);
-            List<IUserPresence> presences = new List<IUserPresence>(match.Presences);
-            presences.Add(match.Self);
             UnityMainThread.AddJob(() => onMatchJoin?.Invoke());
         }
 

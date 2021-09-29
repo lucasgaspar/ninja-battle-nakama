@@ -1,6 +1,7 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
+
+using Nakama;
 
 namespace NinjaBattle.Game
 {
@@ -27,7 +28,7 @@ namespace NinjaBattle.Game
 
         #region BEHAVIORS
 
-        public void Initialize(MapData mapData, List<string> players)
+        public void Initialize(MapData mapData, List<IUserPresence> players)
         {
             int halfWidth = mapData.Width / 2;
             int halfHeight = mapData.Height / 2;
@@ -50,7 +51,8 @@ namespace NinjaBattle.Game
                 SetTileAsWater(obstacle);
 
             for (int playerNumber = 0; playerNumber < players.Count; playerNumber++)
-                InstantiateNinja(playerNumber, mapData.SpawnPoints[playerNumber]);
+                if (players[playerNumber] != null)
+                    InstantiateNinja(playerNumber, mapData.SpawnPoints[playerNumber]);
         }
 
         public void SetTileAsWall(Vector2Int coordinates)

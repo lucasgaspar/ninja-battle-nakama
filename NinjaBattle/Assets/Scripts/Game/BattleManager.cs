@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Nakama.Helpers;
+using Nakama;
 
 namespace NinjaBattle.Game
 {
@@ -12,12 +13,11 @@ namespace NinjaBattle.Game
         #region FIELDS
 
         private const float TickRate = 4f;
-        private const int Draw = -1;
 
         [SerializeField] private List<MapData> maps = null;
-        [SerializeField] private List<string> players = new List<string>();
         [SerializeField] private Map map = null;
 
+        private List<IUserPresence> players = null;
         private MapData currentMap = null;
 
         #endregion
@@ -47,29 +47,31 @@ namespace NinjaBattle.Game
 
         private void Start()
         {
-            MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.PlayerWon, ReceivedPlayerWonRound);
             MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.PlayerInput, ReceivedPlayerInput);
+            players = PlayersManager.Instance.Players;
             Initialize(players.Count);
             StartGame();
         }
 
         private void OnDestroy()
         {
-            MultiplayerManager.Instance.Unsubscribe(MultiplayerManager.Code.PlayerWon, ReceivedPlayerWonRound);
             MultiplayerManager.Instance.Unsubscribe(MultiplayerManager.Code.PlayerInput, ReceivedPlayerInput);
         }
 
-        private void ReceivedPlayerWonRound(MultiplayerMessage message)
-        {
-            PlayerWonData playerWonData = message.GetData<PlayerWonData>();
-        }
-
-
         private void ReceivedPlayerInput(MultiplayerMessage message)
         {
-            throw new NotImplementedException();
+            InputData inputData = message.GetData<InputData>();
+            SetPlayerInput(GetPlayerNumber(message.SessionId), inputData.Tick, (Direction)inputData.Direction);
         }
 
+        private int GetPlayerNumber(string sessionId)
+        {
+            for (int i = 0; i < players.Count; i++)
+                if (players[i].SessionId == sessionId)
+                    return i;
+
+            return -1;
+        }
 
         private void Initialize(int playersAmount)
         {

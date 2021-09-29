@@ -7,6 +7,9 @@ namespace NinjaBattle.Game
     {
         #region FIELDS
 
+        private const float JumpScale = 0.6f;
+        private const float NormalScale = 0.4f;
+
         [SerializeField] private SpriteRenderer spriteRenderer = null;
         [SerializeField] private List<Color> ninjaColors = new List<Color>();
 
@@ -124,20 +127,20 @@ namespace NinjaBattle.Game
                 currentDirection = directions[tick];
 
             isJumping.EraseFuture(tick);
-            spriteRenderer.transform.localScale = Vector3.one * (isJumping[tick] ? 0.6f : 0.4f);
+            spriteRenderer.transform.localScale = Vector3.one * (isJumping[tick] ? JumpScale : NormalScale);
             IsAlive.EraseFuture(tick);
         }
 
         private void JumpStart(int tick)
         {
             isJumping[tick] = true;
-            spriteRenderer.transform.localScale = Vector3.one * 0.6f;
+            spriteRenderer.transform.localScale = Vector3.one * JumpScale;
         }
 
         private void JumpEnd(int tick)
         {
             isJumping[tick] = false;
-            spriteRenderer.transform.localScale = Vector3.one * 0.4f;
+            spriteRenderer.transform.localScale = Vector3.one * NormalScale;
         }
 
         private void KillNinja(int tick)

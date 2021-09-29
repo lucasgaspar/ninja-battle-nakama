@@ -45,7 +45,6 @@ namespace NinjaBattle.Game
             PlayerWonData playerWonData = message.GetData<PlayerWonData>();
         }
 
-
         private void ReceivedChangeScene(MultiplayerMessage message)
         {
             SceneManager.LoadScene(message.GetData<int>());
