@@ -88,22 +88,7 @@ function processMessages(messages: nkruntime.MatchMessage[], gameState: GameStat
 
 function messagesDefaultLogic(message: nkruntime.MatchMessage, gameState: GameState, dispatcher: nkruntime.MatchDispatcher): void
 {
-    if (MessagesToSendBack.indexOf(<OperationCode>message.opCode) != -1)
-    {
-        dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
-        return;
-    }
-    else
-    {
-        let otherPlayers: nkruntime.Presence[] = [];
-        gameState.players.forEach(player =>
-        {
-            if (player != undefined && player.sessionId != message.sender.sessionId)
-                otherPlayers.push(player);
-        });
-
-        dispatcher.broadcastMessage(message.opCode, message.data, otherPlayers, message.sender);
-    }
+    dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
 }
 
 function processMatchLoop(gameState: GameState, nakama: nkruntime.Nakama, dispatcher: nkruntime.MatchDispatcher, logger: nkruntime.Logger): void

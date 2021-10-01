@@ -18,7 +18,7 @@ namespace NinjaBattle.General
         [SerializeField] private int playerNumber = 0;
         [SerializeField] private Image portrait = null;
         [SerializeField] private Color noPlayerColor = Color.white;
-        [SerializeField] private Color connecctedPlayerColor = Color.white;
+        [SerializeField] private Color connectedPlayerColor = Color.white;
         [SerializeField] private TMP_Text displayName = null;
 
         #endregion
@@ -59,7 +59,7 @@ namespace NinjaBattle.General
         private void SetPortrait(List<IUserPresence> players)
         {
             bool hasPlayer = players.Count > playerNumber && players[playerNumber] != null;
-            portrait.color = hasPlayer ? connecctedPlayerColor : noPlayerColor;
+            portrait.color = hasPlayer ? connectedPlayerColor : noPlayerColor;
             displayName.text = hasPlayer ? "Player " + playerNumber : string.Empty;
         }
 

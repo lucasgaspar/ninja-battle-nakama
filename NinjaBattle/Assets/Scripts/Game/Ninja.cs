@@ -27,12 +27,13 @@ namespace NinjaBattle.Game
         #region PROPERTIES
 
         public RollbackVar<bool> IsAlive { get; private set; } = new RollbackVar<bool>();
+        public string SessionId { get; private set; } = string.Empty;
 
         #endregion
 
         #region BEHAVIORS
 
-        public void Initialize(SpawnPoint spawnPoint, int playerNumber, Map map)
+        public void Initialize(SpawnPoint spawnPoint, int playerNumber, Map map, string sessionId)
         {
             currentCoordinates = desiredCoordinates = spawnPoint.Coordinates;
             desiredCoordinates += spawnPoint.Direction.ToVector2();
@@ -46,6 +47,7 @@ namespace NinjaBattle.Game
             IsAlive[0] = true;
             positions[0] = currentCoordinates;
             directions[0] = currentDirection;
+            SessionId = sessionId;
         }
 
         private void OnDestroy()

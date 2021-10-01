@@ -1,7 +1,7 @@
 const JoinOrCreateMatchRpc = "JoinOrCreateMatchRpc";
 const LogicLoadedLoggerInfo = "Custom logic loaded.";
 const MatchModuleName = "match";
-const TickRate = 4;
+const TickRate = 8;
 const DurationLobby = 5;
 const DurationRoundResults = 5;
 const NecessaryWins = 3;
@@ -13,5 +13,3 @@ const MessagesLogic: { [opCode: number]: (message: nkruntime.MatchMessage, state
     2: playerWon,
     3: draw
 }
-
-const MessagesToSendBack: OperationCode[] = [];

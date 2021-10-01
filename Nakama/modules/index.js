@@ -90,18 +90,7 @@ function processMessages(messages, gameState, dispatcher) {
     }
 }
 function messagesDefaultLogic(message, gameState, dispatcher) {
-    if (MessagesToSendBack.indexOf(message.opCode) != -1) {
-        dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
-        return;
-    }
-    else {
-        var otherPlayers_1 = [];
-        gameState.players.forEach(function (player) {
-            if (player != undefined && player.sessionId != message.sender.sessionId)
-                otherPlayers_1.push(player);
-        });
-        dispatcher.broadcastMessage(message.opCode, message.data, otherPlayers_1, message.sender);
-    }
+    dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
 }
 function processMatchLoop(gameState, nakama, dispatcher, logger) {
     switch (gameState.scene) {
@@ -207,7 +196,7 @@ function playerNumberIsUsed(players, playerNumber) {
 var JoinOrCreateMatchRpc = "JoinOrCreateMatchRpc";
 var LogicLoadedLoggerInfo = "Custom logic loaded.";
 var MatchModuleName = "match";
-var TickRate = 4;
+var TickRate = 8;
 var DurationLobby = 5;
 var DurationRoundResults = 5;
 var NecessaryWins = 3;
@@ -217,4 +206,3 @@ var MessagesLogic = {
     2: playerWon,
     3: draw
 };
-var MessagesToSendBack = [];

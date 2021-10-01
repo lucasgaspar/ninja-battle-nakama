@@ -50,13 +50,13 @@ namespace Nakama.Helpers
 
         public void LoginWithDevice(NakamaConnectionData connectionData)
         {
-            client = new Client(connectionData.Scheme, connectionData.Host, connectionData.Port, connectionData.ServerKey);
+            client = new Client(connectionData.Scheme, connectionData.Host, connectionData.Port, connectionData.ServerKey, UnityWebRequestAdapter.Instance);
             LoginAsync(connectionData, client.AuthenticateDeviceAsync(SystemInfo.deviceUniqueIdentifier));
         }
 
         public void LoginWithCustomId(NakamaConnectionData connectionData, string customId)
         {
-            client = new Client(connectionData.Scheme, connectionData.Host, connectionData.Port, connectionData.ServerKey);
+            client = new Client(connectionData.Scheme, connectionData.Host, connectionData.Port, connectionData.ServerKey, UnityWebRequestAdapter.Instance);
             LoginAsync(connectionData, client.AuthenticateCustomAsync(customId));
         }
 

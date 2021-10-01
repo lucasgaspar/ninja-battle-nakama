@@ -52,7 +52,7 @@ namespace NinjaBattle.Game
 
             for (int playerNumber = 0; playerNumber < players.Count; playerNumber++)
                 if (players[playerNumber] != null)
-                    InstantiateNinja(playerNumber, mapData.SpawnPoints[playerNumber]);
+                    InstantiateNinja(playerNumber, mapData.SpawnPoints[playerNumber], players[playerNumber].SessionId);
         }
 
         public void SetTileAsWall(Vector2Int coordinates)
@@ -101,10 +101,10 @@ namespace NinjaBattle.Game
             return mapDangerousTiles.Contains(coordinates) || ninjaDangerousTiles.Contains(coordinates);
         }
 
-        public void InstantiateNinja(int playerNumber, SpawnPoint spawnPoint)
+        public void InstantiateNinja(int playerNumber, SpawnPoint spawnPoint, string sessionId)
         {
             Ninja ninja = Instantiate(ninjaPrefab, transform);
-            ninja.Initialize(spawnPoint, playerNumber, this);
+            ninja.Initialize(spawnPoint, playerNumber, this, sessionId);
             Ninjas.Add(ninja);
         }
 

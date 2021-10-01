@@ -94,8 +94,8 @@ namespace NinjaBattle.Game
 
             if (playersAlive.Count() == 0)
                 MultiplayerManager.Instance.Send(MultiplayerManager.Code.Draw, new DrawData(tick));
-            else
-                MultiplayerManager.Instance.Send(MultiplayerManager.Code.PlayerWon, new PlayerWonData(tick, 0)); //MUST GET REAL PLAYER NUMBER
+            //else
+            //    MultiplayerManager.Instance.Send(MultiplayerManager.Code.PlayerWon, new PlayerWonData(tick, GetPlayerNumber(playersAlive.First().SessionId)));
         }
 
         private void ProcessTick()
@@ -112,13 +112,26 @@ namespace NinjaBattle.Game
 
             map.GetNinja(playerNumber).SetInput(direction, tick);
             if (tick < CurrentTick)
-                onRewind?.Invoke(tick);
-
-            while (tick < CurrentTick)
             {
-                onTick?.Invoke(tick);
-                onTickEnd?.Invoke(tick);
-                tick++;
+                onRewind?.Invoke(tick);
+                while (tick < CurrentTick)
+                {
+                    onTick?.Invoke(tick);
+                    onTickEnd?.Invoke(tick);
+                    tick++;
+                }
+            }
+
+            if (tick > CurrentTick)
+            {
+                CancelInvoke(nameof(ProcessTick));
+                InvokeRepeating(nameof(ProcessTick), TickDuration, TickDuration);
+                while (tick > CurrentTick)
+                {
+                    onTick?.Invoke(tick);
+                    onTickEnd?.Invoke(tick);
+                    tick++;
+                }
             }
         }
 
