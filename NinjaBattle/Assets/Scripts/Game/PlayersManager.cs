@@ -46,18 +46,16 @@ namespace NinjaBattle.Game
         {
             multiplayerManager = MultiplayerManager.Instance;
             nakamaManager = NakamaManager.Instance;
-            nakamaManager.Socket.ReceivedMatchPresence += PlayersChanged;
             multiplayerManager.onMatchJoin += MatchJoined;
-            multiplayerManager.onMatchLeave += ResetPlayersData;
+            multiplayerManager.onMatchLeave += ResetLeaved;
             multiplayerManager.Subscribe(MultiplayerManager.Code.Players, SetPlayers);
             multiplayerManager.Subscribe(MultiplayerManager.Code.ChangeScene, MatchStarted);
         }
 
         private void OnDestroy()
         {
-            nakamaManager.Socket.ReceivedMatchPresence -= PlayersChanged;
             multiplayerManager.onMatchJoin -= MatchJoined;
-            multiplayerManager.onMatchLeave -= ResetPlayersData;
+            multiplayerManager.onMatchLeave -= ResetLeaved;
             multiplayerManager.Unsubscribe(MultiplayerManager.Code.Players, SetPlayers);
             multiplayerManager.Unsubscribe(MultiplayerManager.Code.ChangeScene, MatchStarted);
         }
@@ -98,12 +96,14 @@ namespace NinjaBattle.Game
 
         private void MatchJoined()
         {
+            nakamaManager.Socket.ReceivedMatchPresence += PlayersChanged;
             CurrentPlayer = Players.Find(player => player.SessionId == multiplayerManager.Self.SessionId);
             CurrentPlayerNumber = Players.IndexOf(CurrentPlayer);
         }
 
-        private void ResetPlayersData()
+        private void ResetLeaved()
         {
+            nakamaManager.Socket.ReceivedMatchPresence -= PlayersChanged;
             blockJoinsAndLeaves = false;
             Players = null;
             CurrentPlayer = null;

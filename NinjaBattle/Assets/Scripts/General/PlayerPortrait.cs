@@ -23,6 +23,12 @@ namespace NinjaBattle.General
 
         #endregion
 
+        #region PROPERTIES
+
+        public int PlayerNumber { get => playerNumber; set => playerNumber = value; }
+
+        #endregion
+
         #region BEHAVIORS
 
         private void Start()

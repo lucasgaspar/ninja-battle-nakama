@@ -11,11 +11,15 @@ namespace NinjaBattle.Game
     {
         #region FIELDS
 
+        private const int VictoriesRequiredToWin = 3;
+
         #endregion
 
         #region PROPERTIES
 
-        public static GameManager Instance { get; private set; }
+        public static GameManager Instance { get; private set; } = null;
+        public int[] PlayersWins { get; private set; } = new int[4];
+        public int Winner { get; private set; } = 0;
 
         #endregion
 
@@ -43,6 +47,9 @@ namespace NinjaBattle.Game
         private void ReceivedPlayerWonRound(MultiplayerMessage message)
         {
             PlayerWonData playerWonData = message.GetData<PlayerWonData>();
+            PlayersWins[playerWonData.PlayerNumber]++;
+            if (PlayersWins[playerWonData.PlayerNumber] >= VictoriesRequiredToWin)
+                Winner = playerWonData.PlayerNumber;
         }
 
         private void ReceivedChangeScene(MultiplayerMessage message)

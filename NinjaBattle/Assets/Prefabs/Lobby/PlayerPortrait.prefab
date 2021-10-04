@@ -227,7 +227,7 @@ MonoBehaviour:
   playerNumber: 0
   portrait: {fileID: 4825519343842968135}
   noPlayerColor: {r: 1, g: 1, b: 1, a: 0.14901961}
-  connecctedPlayerColor: {r: 1, g: 1, b: 1, a: 1}
+  connectedPlayerColor: {r: 1, g: 1, b: 1, a: 1}
   displayName: {fileID: 3105888668479609591}
 --- !u!1 &6695216764581941673
 GameObject:

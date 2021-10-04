@@ -94,8 +94,8 @@ namespace NinjaBattle.Game
 
             if (playersAlive.Count() == 0)
                 MultiplayerManager.Instance.Send(MultiplayerManager.Code.Draw, new DrawData(tick));
-            //else
-            //    MultiplayerManager.Instance.Send(MultiplayerManager.Code.PlayerWon, new PlayerWonData(tick, GetPlayerNumber(playersAlive.First().SessionId)));
+            else
+                MultiplayerManager.Instance.Send(MultiplayerManager.Code.PlayerWon, new PlayerWonData(tick, GetPlayerNumber(playersAlive.First().SessionId)));
         }
 
         private void ProcessTick()
