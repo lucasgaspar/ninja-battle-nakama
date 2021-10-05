@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Nakama.Helpers
 {
@@ -10,10 +11,18 @@ namespace Nakama.Helpers
 
         #endregion
 
+        #region EVENTS
+
+        public event Action onLoaded = null;
+
+        #endregion
+
         #region PROPERTIES
 
         public static NakamaUserManager Instance { get; private set; } = null;
         public bool LoadingFinished { get; private set; } = false;
+        public IApiUser User { get => account.User; }
+        public string Wallet { get => account.Wallet; }
         public string DisplayName { get => account.User.DisplayName; }
 
         #endregion
@@ -27,18 +36,24 @@ namespace Nakama.Helpers
 
         private void Start()
         {
-            NakamaManager.Instance.onLoginSuccess += LoadAsync;
+            NakamaManager.Instance.onLoginSuccess += AutoLoad;
         }
 
         private void OnDestroy()
         {
-            NakamaManager.Instance.onLoginSuccess -= LoadAsync;
+            NakamaManager.Instance.onLoginSuccess -= AutoLoad;
         }
 
-        private async void LoadAsync()
+        private async void AutoLoad()
         {
             account = await NakamaManager.Instance.Client.GetAccountAsync(NakamaManager.Instance.Session);
             LoadingFinished = true;
+            onLoaded?.Invoke();
+        }
+
+        public async void UpdateDisplayName(string displayName)
+        {
+            await NakamaManager.Instance.Client.UpdateAccountAsync(NakamaManager.Instance.Session, null, displayName);
         }
 
         public T GetWallet<T>()

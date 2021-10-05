@@ -8,6 +8,10 @@ namespace Nakama.Helpers
     {
         #region FIELDS
 
+        private const string UdidKey = "udid";
+
+        [SerializeField] private NakamaConnectionData connectionData = null;
+
         private IClient client = null;
         private ISession session = null;
         private ISocket socket = null;
@@ -48,13 +52,21 @@ namespace Nakama.Helpers
                 socket.CloseAsync();
         }
 
-        public void LoginWithDevice(NakamaConnectionData connectionData)
+        public void LoginWithUdid()
+        {
+            var udid = PlayerPrefs.GetString(UdidKey, Guid.NewGuid().ToString());
+            PlayerPrefs.SetString(UdidKey, udid);
+            client = new Client(connectionData.Scheme, connectionData.Host, connectionData.Port, connectionData.ServerKey, UnityWebRequestAdapter.Instance);
+            LoginAsync(connectionData, client.AuthenticateDeviceAsync(udid));
+        }
+
+        public void LoginWithDevice()
         {
             client = new Client(connectionData.Scheme, connectionData.Host, connectionData.Port, connectionData.ServerKey, UnityWebRequestAdapter.Instance);
             LoginAsync(connectionData, client.AuthenticateDeviceAsync(SystemInfo.deviceUniqueIdentifier));
         }
 
-        public void LoginWithCustomId(NakamaConnectionData connectionData, string customId)
+        public void LoginWithCustomId(string customId)
         {
             client = new Client(connectionData.Scheme, connectionData.Host, connectionData.Port, connectionData.ServerKey, UnityWebRequestAdapter.Instance);
             LoginAsync(connectionData, client.AuthenticateCustomAsync(customId));

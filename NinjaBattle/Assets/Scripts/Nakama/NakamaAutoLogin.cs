@@ -7,7 +7,6 @@ namespace Nakama.Helpers
         #region FIELDS
 
         [SerializeField] private float retryTime = 5f;
-        [SerializeField] private NakamaConnectionData nakamaConnectionData = null;
 
         #endregion
 
@@ -26,7 +25,7 @@ namespace Nakama.Helpers
 
         private void TryLogin()
         {
-            NakamaManager.Instance.LoginWithDevice(nakamaConnectionData);
+            NakamaManager.Instance.LoginWithUdid();
         }
 
         private void LoginFailed()
