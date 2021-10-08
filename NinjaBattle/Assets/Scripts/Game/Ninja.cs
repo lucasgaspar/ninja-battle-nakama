@@ -12,6 +12,8 @@ namespace NinjaBattle.Game
 
         [SerializeField] private SpriteRenderer spriteRenderer = null;
         [SerializeField] private List<Color> ninjaColors = new List<Color>();
+        [SerializeField] private SpriteRenderer ninjaSpriteRenderer = null;
+        [SerializeField] private List<Sprite> ninjaSprites = new List<Sprite>();
 
         private Direction currentDirection = Direction.East;
         private RollbackVar<List<Direction>> nextDirections = new RollbackVar<List<Direction>>();
@@ -39,8 +41,9 @@ namespace NinjaBattle.Game
             desiredCoordinates += spawnPoint.Direction.ToVector2();
             currentDirection = spawnPoint.Direction;
             this.map = map;
-            spriteRenderer.transform.position = ((Vector3Int)currentCoordinates);
+            spriteRenderer.transform.position = ninjaSpriteRenderer.transform.position = ((Vector3Int)currentCoordinates);
             spriteRenderer.color = ninjaColors[playerNumber];
+            ninjaSpriteRenderer.sprite = ninjaSprites[playerNumber];
             BattleManager.Instance.onTick += ProcessTick;
             BattleManager.Instance.onRewind += Rewind;
             isJumping[0] = false;
@@ -54,6 +57,12 @@ namespace NinjaBattle.Game
         {
             BattleManager.Instance.onTick -= ProcessTick;
             BattleManager.Instance.onRewind -= Rewind;
+        }
+
+        Vector3 currentVelocity = Vector3.zero;
+        private void Update()
+        {
+            ninjaSpriteRenderer.transform.position = Vector3.SmoothDamp(ninjaSpriteRenderer.transform.position, spriteRenderer.transform.position, ref currentVelocity, 0.2f);
         }
 
         public void SetInput(Direction direction, int tick)

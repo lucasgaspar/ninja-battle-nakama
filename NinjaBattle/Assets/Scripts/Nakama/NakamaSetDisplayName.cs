@@ -8,6 +8,8 @@ namespace Nakama.Helpers
     {
         #region FIELDS
 
+        private const float delay = 1f;
+
         [SerializeField] private TMP_InputField inputField = null;
         [SerializeField] private string[] firstPart = null;
         [SerializeField] private string[] secondPart = null;
@@ -22,14 +24,14 @@ namespace Nakama.Helpers
         {
             nakamaUserManager = NakamaUserManager.Instance;
             nakamaUserManager.onLoaded += ObtainName;
-            inputField.onValueChanged.AddListener(UpdateName);
+            inputField.onValueChanged.AddListener(ValueChanged);
             if (nakamaUserManager.LoadingFinished)
                 ObtainName();
         }
 
         private void OnDestroy()
         {
-            inputField.onValueChanged.RemoveListener(UpdateName);
+            inputField.onValueChanged.RemoveListener(ValueChanged);
             nakamaUserManager.onLoaded -= ObtainName;
         }
 
@@ -41,10 +43,16 @@ namespace Nakama.Helpers
                 inputField.text = nakamaUserManager.DisplayName;
         }
 
-        private void UpdateName(string newDisplayName)
+        private void ValueChanged(string newValue)
         {
-            if (newDisplayName != nakamaUserManager.DisplayName)
-                nakamaUserManager.UpdateDisplayName(newDisplayName);
+            CancelInvoke(nameof(UpdateName));
+            Invoke(nameof(UpdateName), delay);
+        }
+
+        private void UpdateName()
+        {
+            if (inputField.text != nakamaUserManager.DisplayName)
+                nakamaUserManager.UpdateDisplayName(inputField.text);
         }
 
         #endregion

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Connection
   m_EditorClassIdentifier: 
   scheme: http
-  host: 34.133.188.12
+  host: 34.134.79.29
   port: 7350
   serverKey: defaultkey

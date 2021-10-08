@@ -3,10 +3,12 @@ using UnityEngine;
 
 namespace NinjaBattle.Game
 {
-    [CreateAssetMenu(fileName = "MapData")]
+    [CreateAssetMenu(menuName = MenuName)]
     public class MapData : ScriptableObject
     {
         #region FIELDS
+
+        private const string MenuName = "NinjaBattle/MapData";
 
         [SerializeField] private int width = default(int);
         [SerializeField] private int height = default(int);
