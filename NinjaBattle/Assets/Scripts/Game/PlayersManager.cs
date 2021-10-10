@@ -79,7 +79,8 @@ namespace NinjaBattle.Game
                         presence = null;
                 });
 
-                onPlayerLeft?.Invoke(userPresence);
+                UnityMainThread.AddJob(() => onPlayerLeft?.Invoke(userPresence));
+
             }
 
             foreach (IUserPresence userPresence in matchPresenceEvent.Joins)
@@ -90,7 +91,7 @@ namespace NinjaBattle.Game
                 else
                     Players.Add(userPresence);
 
-                onPlayerJoined?.Invoke(userPresence);
+                UnityMainThread.AddJob(() => onPlayerJoined?.Invoke(userPresence));
             }
         }
 

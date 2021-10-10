@@ -62,7 +62,7 @@ namespace NinjaBattle.Game
         Vector3 currentVelocity = Vector3.zero;
         private void Update()
         {
-            ninjaSpriteRenderer.transform.position = Vector3.SmoothDamp(ninjaSpriteRenderer.transform.position, spriteRenderer.transform.position, ref currentVelocity, 0.2f);
+            ninjaSpriteRenderer.transform.position = Vector3.SmoothDamp(ninjaSpriteRenderer.transform.position, spriteRenderer.transform.position, ref currentVelocity, 0.15f);
         }
 
         public void SetInput(Direction direction, int tick)
