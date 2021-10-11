@@ -757,6 +757,10 @@ PrefabInstance:
       propertyPath: duration
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 4098537980838475737, guid: 9723d9d9ecdb3493db3624f82cb7452f, type: 3}
+      propertyPath: autoStart
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4098537980838475738, guid: 9723d9d9ecdb3493db3624f82cb7452f, type: 3}
       propertyPath: m_IsActive
       value: 0

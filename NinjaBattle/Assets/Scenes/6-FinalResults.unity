@@ -194,8 +194,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   portrait: {fileID: 164137526}
-  winnerPortrait: {fileID: 0}
-  playersPortrait: []
+  winnerPortrait: {fileID: 164137529}
+  playersPortrait:
+  - {fileID: 21300000, guid: edc992f487d914279a54f54af218bc05, type: 3}
+  - {fileID: 21300000, guid: 63f3609d40ea24a508515f3df6af4104, type: 3}
+  - {fileID: 21300000, guid: a917c0d612d774202bfd70f18ab7b488, type: 3}
+  - {fileID: 21300000, guid: 142ff251d1b794726b6d8251bb2461cf, type: 3}
+--- !u!114 &164137529 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4825519343842968135, guid: 95650f13fef4842e3ae8bf31063b240a, type: 3}
+  m_PrefabInstance: {fileID: 164137524}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &313932541
 GameObject:
   m_ObjectHideFlags: 0

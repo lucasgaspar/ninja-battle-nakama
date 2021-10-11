@@ -26,6 +26,7 @@ namespace NinjaBattle.General
             playersManager.onPlayerJoined += PlayerJoined;
             playersManager.onPlayerLeft += PlayerLeft;
             playersManager.onPlayersReceived += PlayersReceived;
+            UpdateStatus();
         }
 
         private void OnDestroy()

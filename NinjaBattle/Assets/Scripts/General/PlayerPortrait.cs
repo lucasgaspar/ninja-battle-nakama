@@ -68,7 +68,7 @@ namespace NinjaBattle.General
         {
             bool hasPlayer = players.Count > playerNumber && players[playerNumber] != null;
             portrait.color = hasPlayer ? connectedPlayerColor : noPlayerColor;
-            displayName.text = hasPlayer ? "Player " + playerNumber + 1 : string.Empty;
+            displayName.text = hasPlayer ? "Player " + (playerNumber + 1) : string.Empty;
             displayName.color = playersManager.CurrentPlayerNumber == playerNumber ? youColor : othersColor;
         }
 

@@ -43,12 +43,15 @@ namespace NinjaBattle.General
 
         private void SecondElapsed()
         {
+            if (TimeRemaining == 0)
+            {
+                onTimerEnd?.Invoke();
+                return;
+            }
+
             TimeRemaining--;
             onSecondElapsed?.Invoke(TimeRemaining);
-            if (TimeRemaining > 0)
-                Invoke(nameof(SecondElapsed), OneSecond);
-            else
-                onTimerEnd?.Invoke();
+            Invoke(nameof(SecondElapsed), OneSecond);
         }
 
         public void StartTimer()
