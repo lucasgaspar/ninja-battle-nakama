@@ -17679,6 +17679,7 @@ GameObject:
   - component: {fileID: 1187060030}
   - component: {fileID: 1187060029}
   - component: {fileID: 1187060031}
+  - component: {fileID: 1187060028}
   m_Layer: 0
   m_Name: BattleManager
   m_TagString: Untagged
@@ -17686,6 +17687,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1187060028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1187060027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6d0aae5b047f49d1b47a5ab88401308, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delay: 0
+  keyUp: 119
+  keyLeft: 97
+  keyRight: 100
+  keyDown: 115
 --- !u!114 &1187060029
 MonoBehaviour:
   m_ObjectHideFlags: 0
