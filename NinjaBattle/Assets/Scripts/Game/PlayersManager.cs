@@ -74,14 +74,11 @@ namespace NinjaBattle.Game
 
             foreach (IUserPresence userPresence in matchPresenceEvent.Leaves)
             {
-                Players.ForEach(presence =>
-                {
-                    if (presence != null && presence.SessionId == userPresence.SessionId)
-                        presence = null;
-                });
+                for (int i = 0; i < Players.Count(); i++)
+                    if (Players[i] != null && Players[i].SessionId == userPresence.SessionId)
+                        Players[i] = null;
 
                 UnityMainThread.AddJob(() => onPlayerLeft?.Invoke(userPresence));
-
             }
 
             foreach (IUserPresence userPresence in matchPresenceEvent.Joins)
