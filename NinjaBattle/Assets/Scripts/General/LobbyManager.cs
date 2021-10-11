@@ -54,7 +54,6 @@ namespace NinjaBattle.General
         private void UpdateStatus()
         {
             bool gameStarting = playersManager.PlayersCount > 1;
-            Debug.Log(playersManager.PlayersCount);
             waitingText.SetActive(!gameStarting);
             timer.gameObject.SetActive(gameStarting);
             if (gameStarting)
