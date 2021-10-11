@@ -74,8 +74,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -229,6 +229,8 @@ MonoBehaviour:
   noPlayerColor: {r: 1, g: 1, b: 1, a: 0.14901961}
   connectedPlayerColor: {r: 1, g: 1, b: 1, a: 1}
   displayName: {fileID: 3105888668479609591}
+  youColor: {r: 1, g: 0.9843137, b: 0, a: 1}
+  othersColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &6695216764581941673
 GameObject:
   m_ObjectHideFlags: 0

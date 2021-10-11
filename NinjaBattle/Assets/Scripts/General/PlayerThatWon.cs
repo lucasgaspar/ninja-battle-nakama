@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
-
-using Nakama;
+using UnityEngine.UI;
 
 using NinjaBattle.Game;
 
@@ -12,6 +10,8 @@ namespace NinjaBattle.General
         #region FIELDS
 
         [SerializeField] private PlayerPortrait portrait = null;
+        [SerializeField] private Image winnerPortrait = null;
+        [SerializeField] private Sprite[] playersPortrait = null;
 
         #endregion
 
@@ -20,6 +20,7 @@ namespace NinjaBattle.General
         private void Awake()
         {
             portrait.PlayerNumber = GameManager.Instance.Winner;
+            winnerPortrait.sprite = playersPortrait[GameManager.Instance.Winner];
         }
 
         #endregion

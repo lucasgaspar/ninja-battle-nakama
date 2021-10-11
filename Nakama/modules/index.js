@@ -103,7 +103,7 @@ function processMatchLoop(gameState, nakama, dispatcher, logger) {
     }
 }
 function matchLoopLobby(gameState, nakama, dispatcher) {
-    if (gameState.countdown > 0 /* && getPlayersCount(gameState.players) > 0*/) {
+    if (gameState.countdown > 0 && getPlayersCount(gameState.players) > 1) {
         gameState.countdown--;
         if (gameState.countdown == 0) {
             gameState.scene = 4 /* Battle */;
@@ -196,9 +196,9 @@ function playerNumberIsUsed(players, playerNumber) {
 var JoinOrCreateMatchRpc = "JoinOrCreateMatchRpc";
 var LogicLoadedLoggerInfo = "Custom logic loaded.";
 var MatchModuleName = "match";
-var TickRate = 8;
-var DurationLobby = 5;
-var DurationRoundResults = 5;
+var TickRate = 16;
+var DurationLobby = 10;
+var DurationRoundResults = 10;
 var NecessaryWins = 3;
 var MaxPlayers = 4;
 var PlayerNotFound = -1;

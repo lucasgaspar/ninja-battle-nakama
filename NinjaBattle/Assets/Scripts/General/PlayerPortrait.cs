@@ -20,6 +20,8 @@ namespace NinjaBattle.General
         [SerializeField] private Color noPlayerColor = Color.white;
         [SerializeField] private Color connectedPlayerColor = Color.white;
         [SerializeField] private TMP_Text displayName = null;
+        [SerializeField] private Color youColor = Color.white;
+        [SerializeField] private Color othersColor = Color.white;
 
         #endregion
 
@@ -66,7 +68,8 @@ namespace NinjaBattle.General
         {
             bool hasPlayer = players.Count > playerNumber && players[playerNumber] != null;
             portrait.color = hasPlayer ? connectedPlayerColor : noPlayerColor;
-            displayName.text = hasPlayer ? "Player " + playerNumber : string.Empty;
+            displayName.text = hasPlayer ? "Player " + playerNumber + 1 : string.Empty;
+            displayName.color = playersManager.CurrentPlayerNumber == playerNumber ? youColor : othersColor;
         }
 
         #endregion

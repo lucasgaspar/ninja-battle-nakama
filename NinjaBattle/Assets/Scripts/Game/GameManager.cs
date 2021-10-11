@@ -59,6 +59,7 @@ namespace NinjaBattle.Game
 
         private void GoToHome()
         {
+            PlayersWins = new int[4];
             SceneManager.LoadScene((int)Scenes.Home);
         }
 

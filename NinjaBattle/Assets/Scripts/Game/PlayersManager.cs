@@ -30,8 +30,9 @@ namespace NinjaBattle.Game
 
         public static PlayersManager Instance { get; private set; } = null;
         public List<IUserPresence> Players { get; private set; } = new List<IUserPresence>();
+        public int PlayersCount { get => Players.Count(player => player != null); }
         public IUserPresence CurrentPlayer { get; private set; } = null;
-        public int CurrentPlayerNumber { get; private set; } = 0;
+        public int CurrentPlayerNumber { get; private set; } = -1;
 
         #endregion
 
@@ -108,7 +109,7 @@ namespace NinjaBattle.Game
             blockJoinsAndLeaves = false;
             Players = null;
             CurrentPlayer = null;
-            CurrentPlayerNumber = default(int);
+            CurrentPlayerNumber = -1;
         }
 
         public void MatchStarted(MultiplayerMessage message)

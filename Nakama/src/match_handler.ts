@@ -102,7 +102,7 @@ function processMatchLoop(gameState: GameState, nakama: nkruntime.Nakama, dispat
 
 function matchLoopLobby(gameState: GameState, nakama: nkruntime.Nakama, dispatcher: nkruntime.MatchDispatcher): void
 {
-    if (gameState.countdown > 0 && getPlayersCount(gameState.players) > 0)
+    if (gameState.countdown > 0 && getPlayersCount(gameState.players) > 1)
     {
         gameState.countdown--;
         if (gameState.countdown == 0)

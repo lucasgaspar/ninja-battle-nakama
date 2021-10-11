@@ -1,9 +1,9 @@
 const JoinOrCreateMatchRpc = "JoinOrCreateMatchRpc";
 const LogicLoadedLoggerInfo = "Custom logic loaded.";
 const MatchModuleName = "match";
-const TickRate = 8;
-const DurationLobby = 5;
-const DurationRoundResults = 5;
+const TickRate = 16;
+const DurationLobby = 10;
+const DurationRoundResults = 10;
 const NecessaryWins = 3;
 const MaxPlayers = 4;
 const PlayerNotFound = -1;

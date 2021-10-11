@@ -28,7 +28,6 @@ namespace NinjaBattle.Game
         public void Initialize(int tick, Vector2Int coordinates, Color color, Map map)
         {
             this.map = map;
-            color.a = 0.75f;
             spriteRenderer.color = color;
             Coordinates = coordinates;
             wasCreated[default(int)] = false;

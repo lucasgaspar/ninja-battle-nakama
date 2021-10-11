@@ -7,8 +7,8 @@ namespace NinjaBattle.Game
     {
         #region FIELDS
 
-        private const float JumpScale = 0.6f;
-        private const float NormalScale = 0.4f;
+        private const float JumpScale = 1.5f;
+        private const float NormalScale = 1f;
 
         [SerializeField] private SpriteRenderer spriteRenderer = null;
         [SerializeField] private List<Color> ninjaColors = new List<Color>();
@@ -62,7 +62,7 @@ namespace NinjaBattle.Game
         Vector3 currentVelocity = Vector3.zero;
         private void Update()
         {
-            ninjaSpriteRenderer.transform.position = Vector3.SmoothDamp(ninjaSpriteRenderer.transform.position, spriteRenderer.transform.position, ref currentVelocity, 0.15f);
+            ninjaSpriteRenderer.transform.position = Vector3.SmoothDamp(ninjaSpriteRenderer.transform.position, spriteRenderer.transform.position, ref currentVelocity, 0.175f);
         }
 
         public void SetInput(Direction direction, int tick)
@@ -138,20 +138,20 @@ namespace NinjaBattle.Game
                 currentDirection = directions[tick];
 
             isJumping.EraseFuture(tick);
-            spriteRenderer.transform.localScale = Vector3.one * (isJumping[tick] ? JumpScale : NormalScale);
+            spriteRenderer.transform.localScale = ninjaSpriteRenderer.transform.localScale = Vector3.one * (isJumping[tick] ? JumpScale : NormalScale);
             IsAlive.EraseFuture(tick);
         }
 
         private void JumpStart(int tick)
         {
             isJumping[tick] = true;
-            spriteRenderer.transform.localScale = Vector3.one * JumpScale;
+            spriteRenderer.transform.localScale = ninjaSpriteRenderer.transform.localScale = Vector3.one * JumpScale;
         }
 
         private void JumpEnd(int tick)
         {
             isJumping[tick] = false;
-            spriteRenderer.transform.localScale = Vector3.one * NormalScale;
+            spriteRenderer.transform.localScale = ninjaSpriteRenderer.transform.localScale = Vector3.one * NormalScale;
         }
 
         private void KillNinja(int tick)

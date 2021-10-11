@@ -128,9 +128,9 @@ namespace NinjaBattle.Game
                 InvokeRepeating(nameof(ProcessTick), TickDuration, TickDuration);
                 while (tick > CurrentTick)
                 {
-                    onTick?.Invoke(tick);
-                    onTickEnd?.Invoke(tick);
-                    tick++;
+                    onTick?.Invoke(CurrentTick);
+                    onTickEnd?.Invoke(CurrentTick);
+                    CurrentTick++;
                 }
             }
         }

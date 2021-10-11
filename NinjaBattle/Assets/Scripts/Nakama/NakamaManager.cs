@@ -57,6 +57,7 @@ namespace Nakama.Helpers
             var udid = PlayerPrefs.GetString(UdidKey, Guid.NewGuid().ToString());
             PlayerPrefs.SetString(UdidKey, udid);
             client = new Client(connectionData.Scheme, connectionData.Host, connectionData.Port, connectionData.ServerKey, UnityWebRequestAdapter.Instance);
+            Debug.Log(udid);
             LoginAsync(connectionData, client.AuthenticateDeviceAsync(udid));
         }
 
@@ -77,8 +78,14 @@ namespace Nakama.Helpers
             onConnecting?.Invoke();
             try
             {
+                Debug.Log("Before Authenticate device Async");
                 session = await sessionTask;
+                Debug.Log("After Authenticate device Async");
                 Debug.Log(session);
+
+                //ISocketAdapter adapter = new WebSocketAdapter();
+                //socket = Nakama.Socket.From(client, adapter);
+
                 socket = client.NewSocket();
                 socket.Connected += Connected;
                 socket.Closed += Disconnected;
