@@ -1,4 +1,7 @@
 "use strict";
+var JoinOrCreateMatchRpc = "JoinOrCreateMatchRpc";
+var LogicLoadedLoggerInfo = "Custom logic loaded.";
+var MatchModuleName = "match";
 function InitModule(ctx, logger, nk, initializer) {
     initializer.registerRpc(JoinOrCreateMatchRpc, joinOrCreateMatch);
     initializer.registerMatch(MatchModuleName, {
@@ -49,11 +52,21 @@ var matchJoin = function (context, logger, nakama, dispatcher, tick, state, pres
     var gameState = state;
     if (gameState.scene != 3 /* Lobby */)
         return { state: gameState };
+    var presencesOnMatch = [];
+    gameState.players.forEach(function (player) { if (player != undefined)
+        presencesOnMatch.push(player.presence); });
     for (var _i = 0, presences_1 = presences; _i < presences_1.length; _i++) {
         var presence = presences_1[_i];
+        var account = nakama.accountGetId(presence.userId);
+        var player = {
+            presence: presence,
+            displayName: account.user.displayName
+        };
         var nextPlayerNumber = getNextPlayerNumber(gameState.players);
-        gameState.players[nextPlayerNumber] = presence;
+        gameState.players[nextPlayerNumber] = player;
         gameState.playersWins[nextPlayerNumber] = 0;
+        dispatcher.broadcastMessage(1 /* PlayerJoined */, JSON.stringify(player), presencesOnMatch);
+        presencesOnMatch.push(presence);
     }
     dispatcher.broadcastMessage(0 /* Players */, JSON.stringify(gameState.players), presences);
     gameState.countdown = DurationLobby * TickRate;
@@ -94,6 +107,9 @@ function messagesDefaultLogic(message, gameState, dispatcher) {
 }
 function processMatchLoop(gameState, nakama, dispatcher, logger) {
     switch (gameState.scene) {
+        case 4 /* Battle */:
+            matchLoopBattle(gameState, nakama, dispatcher);
+            break;
         case 3 /* Lobby */:
             matchLoopLobby(gameState, nakama, dispatcher);
             break;
@@ -102,12 +118,24 @@ function processMatchLoop(gameState, nakama, dispatcher, logger) {
             break;
     }
 }
+function matchLoopBattle(gameState, nakama, dispatcher) {
+    if (gameState.countdown > 0) {
+        gameState.countdown--;
+        if (gameState.countdown == 0) {
+            gameState.roundDeclaredWins = [];
+            gameState.roundDeclaredDraw = [];
+            gameState.countdown = DurationRoundResults * TickRate;
+            gameState.scene = 5 /* RoundResults */;
+            dispatcher.broadcastMessage(5 /* ChangeScene */, JSON.stringify(gameState.scene));
+        }
+    }
+}
 function matchLoopLobby(gameState, nakama, dispatcher) {
     if (gameState.countdown > 0 && getPlayersCount(gameState.players) > 1) {
         gameState.countdown--;
         if (gameState.countdown == 0) {
             gameState.scene = 4 /* Battle */;
-            dispatcher.broadcastMessage(4 /* ChangeScene */, JSON.stringify(gameState.scene));
+            dispatcher.broadcastMessage(5 /* ChangeScene */, JSON.stringify(gameState.scene));
             dispatcher.matchLabelUpdate(JSON.stringify({ open: false }));
         }
     }
@@ -123,7 +151,7 @@ function matchLoopRoundResults(gameState, nakama, dispatcher) {
             else {
                 gameState.scene = 4 /* Battle */;
             }
-            dispatcher.broadcastMessage(4 /* ChangeScene */, JSON.stringify(gameState.scene));
+            dispatcher.broadcastMessage(5 /* ChangeScene */, JSON.stringify(gameState.scene));
         }
     }
 }
@@ -140,12 +168,8 @@ function playerWon(message, gameState, dispatcher) {
     gameState.roundDeclaredWins[tick][playerNumber]++;
     if (gameState.roundDeclaredWins[tick][playerNumber] < getPlayersCount(gameState.players))
         return;
-    gameState.roundDeclaredWins = [];
-    gameState.roundDeclaredDraw = [];
     gameState.playersWins[playerNumber]++;
-    gameState.countdown = DurationRoundResults * TickRate;
-    gameState.scene = 5 /* RoundResults */;
-    dispatcher.broadcastMessage(4 /* ChangeScene */, JSON.stringify(gameState.scene));
+    gameState.countdown = DurationBattleEnding * TickRate;
     dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
 }
 function draw(message, gameState, dispatcher) {
@@ -158,11 +182,7 @@ function draw(message, gameState, dispatcher) {
     gameState.roundDeclaredDraw[tick]++;
     if (gameState.roundDeclaredDraw[tick] < getPlayersCount(gameState.players))
         return;
-    gameState.roundDeclaredWins = [];
-    gameState.roundDeclaredDraw = [];
-    gameState.countdown = DurationRoundResults * TickRate;
-    gameState.scene = 5 /* RoundResults */;
-    dispatcher.broadcastMessage(4 /* ChangeScene */, JSON.stringify(gameState.scene));
+    gameState.countdown = DurationBattleEnding * TickRate;
     dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
 }
 function getPlayersCount(players) {
@@ -180,7 +200,7 @@ function playerObtainedNecessaryWins(playersWins) {
 }
 function getPlayerNumber(players, sessionId) {
     for (var playerNumber = 0; playerNumber < MaxPlayers; playerNumber++)
-        if (players[playerNumber] != undefined && players[playerNumber].sessionId == sessionId)
+        if (players[playerNumber] != undefined && players[playerNumber].presence.sessionId == sessionId)
             return playerNumber;
     return PlayerNotFound;
 }
@@ -193,12 +213,10 @@ function getNextPlayerNumber(players) {
 function playerNumberIsUsed(players, playerNumber) {
     return players[playerNumber] != undefined;
 }
-var JoinOrCreateMatchRpc = "JoinOrCreateMatchRpc";
-var LogicLoadedLoggerInfo = "Custom logic loaded.";
-var MatchModuleName = "match";
 var TickRate = 16;
 var DurationLobby = 10;
 var DurationRoundResults = 10;
+var DurationBattleEnding = 3;
 var NecessaryWins = 3;
 var MaxPlayers = 4;
 var PlayerNotFound = -1;

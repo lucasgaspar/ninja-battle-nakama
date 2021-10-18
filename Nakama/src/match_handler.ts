@@ -34,11 +34,22 @@ let matchJoin: nkruntime.MatchJoinFunction = function (context: nkruntime.Contex
     if (gameState.scene != Scene.Lobby)
         return { state: gameState };
 
+    let presencesOnMatch: nkruntime.Presence[] = [];
+    gameState.players.forEach(player => { if (player != undefined) presencesOnMatch.push(player.presence); });
     for (let presence of presences)
     {
+        var account: nkruntime.Account = nakama.accountGetId(presence.userId);
+        let player: Player =
+        {
+            presence: presence,
+            displayName: account.user.displayName
+        }
+
         let nextPlayerNumber: number = getNextPlayerNumber(gameState.players);
-        gameState.players[nextPlayerNumber] = presence;
+        gameState.players[nextPlayerNumber] = player;
         gameState.playersWins[nextPlayerNumber] = 0;
+        dispatcher.broadcastMessage(OperationCode.PlayerJoined, JSON.stringify(player), presencesOnMatch);
+        presencesOnMatch.push(presence);
     }
 
     dispatcher.broadcastMessage(OperationCode.Players, JSON.stringify(gameState.players), presences);
@@ -95,8 +106,25 @@ function processMatchLoop(gameState: GameState, nakama: nkruntime.Nakama, dispat
 {
     switch (gameState.scene)
     {
+        case Scene.Battle: matchLoopBattle(gameState, nakama, dispatcher); break;
         case Scene.Lobby: matchLoopLobby(gameState, nakama, dispatcher); break;
         case Scene.RoundResults: matchLoopRoundResults(gameState, nakama, dispatcher); break;
+    }
+}
+
+function matchLoopBattle(gameState: GameState, nakama: nkruntime.Nakama, dispatcher: nkruntime.MatchDispatcher): void
+{
+    if (gameState.countdown > 0)
+    {
+        gameState.countdown--;
+        if (gameState.countdown == 0)
+        {
+            gameState.roundDeclaredWins = [];
+            gameState.roundDeclaredDraw = [];
+            gameState.countdown = DurationRoundResults * TickRate;
+            gameState.scene = Scene.RoundResults;
+            dispatcher.broadcastMessage(OperationCode.ChangeScene, JSON.stringify(gameState.scene));
+        }
     }
 }
 
@@ -154,12 +182,8 @@ function playerWon(message: nkruntime.MatchMessage, gameState: GameState, dispat
     if (gameState.roundDeclaredWins[tick][playerNumber] < getPlayersCount(gameState.players))
         return;
 
-    gameState.roundDeclaredWins = [];
-    gameState.roundDeclaredDraw = [];
     gameState.playersWins[playerNumber]++;
-    gameState.countdown = DurationRoundResults * TickRate;
-    gameState.scene = Scene.RoundResults;
-    dispatcher.broadcastMessage(OperationCode.ChangeScene, JSON.stringify(gameState.scene));
+    gameState.countdown = DurationBattleEnding * TickRate;
     dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
 }
 
@@ -177,15 +201,11 @@ function draw(message: nkruntime.MatchMessage, gameState: GameState, dispatcher:
     if (gameState.roundDeclaredDraw[tick] < getPlayersCount(gameState.players))
         return;
 
-    gameState.roundDeclaredWins = [];
-    gameState.roundDeclaredDraw = [];
-    gameState.countdown = DurationRoundResults * TickRate;
-    gameState.scene = Scene.RoundResults;
-    dispatcher.broadcastMessage(OperationCode.ChangeScene, JSON.stringify(gameState.scene));
+    gameState.countdown = DurationBattleEnding * TickRate;
     dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
 }
 
-function getPlayersCount(players: nkruntime.Presence[]): number
+function getPlayersCount(players: Player[]): number
 {
     var count: number = 0;
     for (let playerNumber = 0; playerNumber < MaxPlayers; playerNumber++)
@@ -204,17 +224,17 @@ function playerObtainedNecessaryWins(playersWins: number[]): boolean
     return false;
 }
 
-function getPlayerNumber(players: nkruntime.Presence[], sessionId: string): number
+function getPlayerNumber(players: Player[], sessionId: string): number
 {
     for (let playerNumber = 0; playerNumber < MaxPlayers; playerNumber++)
-        if (players[playerNumber] != undefined && players[playerNumber].sessionId == sessionId)
+        if (players[playerNumber] != undefined && players[playerNumber].presence.sessionId == sessionId)
             return playerNumber;
 
     return PlayerNotFound;
 }
 
 
-function getNextPlayerNumber(players: nkruntime.Presence[]): number
+function getNextPlayerNumber(players: Player[]): number
 {
     for (let playerNumber = 0; playerNumber < MaxPlayers; playerNumber++)
         if (!playerNumberIsUsed(players, playerNumber))
@@ -223,7 +243,7 @@ function getNextPlayerNumber(players: nkruntime.Presence[]): number
     return PlayerNotFound;
 }
 
-function playerNumberIsUsed(players: nkruntime.Presence[], playerNumber: number): boolean
+function playerNumberIsUsed(players: Player[], playerNumber: number): boolean
 {
     return players[playerNumber] != undefined;
 }

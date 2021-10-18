@@ -5,13 +5,19 @@ interface MatchLabel
 
 interface GameState
 {
-    players: nkruntime.Presence[]
+    players: Player[]
     playersWins: number[]
     roundDeclaredWins: number[][]
     roundDeclaredDraw: number[]
     scene: Scene
     countdown: number
     endMatch: boolean
+}
+
+interface Player
+{
+    presence: nkruntime.Presence
+    displayName: string
 }
 
 interface TimeRemainingData
