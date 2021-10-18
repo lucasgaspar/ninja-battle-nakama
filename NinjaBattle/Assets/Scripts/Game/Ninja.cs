@@ -13,7 +13,7 @@ namespace NinjaBattle.Game
         [SerializeField] private SpriteRenderer spriteRenderer = null;
         [SerializeField] private List<Color> ninjaColors = new List<Color>();
         [SerializeField] private SpriteRenderer ninjaSpriteRenderer = null;
-        [SerializeField] private List<Sprite> ninjaSprites = new List<Sprite>();
+        [SerializeField] private List<AnimationData> ninjaAnimations = new List<AnimationData>();
 
         private Direction currentDirection = Direction.East;
         private RollbackVar<List<Direction>> nextDirections = new RollbackVar<List<Direction>>();
@@ -23,6 +23,7 @@ namespace NinjaBattle.Game
         private Vector2Int currentCoordinates = new Vector2Int();
         private RollbackVar<bool> isJumping = new RollbackVar<bool>();
         private Map map = null;
+        private int playerNumber = 0;
 
         #endregion
 
@@ -37,13 +38,14 @@ namespace NinjaBattle.Game
 
         public void Initialize(SpawnPoint spawnPoint, int playerNumber, Map map, string sessionId)
         {
+            this.playerNumber = playerNumber;
             currentCoordinates = desiredCoordinates = spawnPoint.Coordinates;
             desiredCoordinates += spawnPoint.Direction.ToVector2();
             currentDirection = spawnPoint.Direction;
             this.map = map;
             spriteRenderer.transform.position = ninjaSpriteRenderer.transform.position = ((Vector3Int)currentCoordinates);
             spriteRenderer.color = ninjaColors[playerNumber];
-            ninjaSpriteRenderer.sprite = ninjaSprites[playerNumber];
+            ninjaSpriteRenderer.sprite = ninjaAnimations[playerNumber].RunAnimation[0];
             BattleManager.Instance.onTick += ProcessTick;
             BattleManager.Instance.onRewind += Rewind;
             isJumping[0] = false;
@@ -122,8 +124,12 @@ namespace NinjaBattle.Game
             }
 
             currentCoordinates = newCoordinates;
-            spriteRenderer.transform.position = ((Vector3Int)currentCoordinates);
+            if (currentDirection.ToVector2().x > 0)
+                spriteRenderer.flipX = true;
+            else if (currentDirection.ToVector2().x < 0)
+                spriteRenderer.flipX = false;
 
+            spriteRenderer.transform.position = ((Vector3Int)currentCoordinates);
             positions[tick] = currentCoordinates;
             directions[tick] = currentDirection;
         }
@@ -146,17 +152,20 @@ namespace NinjaBattle.Game
         {
             isJumping[tick] = true;
             spriteRenderer.transform.localScale = ninjaSpriteRenderer.transform.localScale = Vector3.one * JumpScale;
+            ninjaSpriteRenderer.sprite = ninjaAnimations[playerNumber].JumpAnimation[0];
         }
 
         private void JumpEnd(int tick)
         {
             isJumping[tick] = false;
             spriteRenderer.transform.localScale = ninjaSpriteRenderer.transform.localScale = Vector3.one * NormalScale;
+            ninjaSpriteRenderer.sprite = ninjaAnimations[playerNumber].RunAnimation[0];
         }
 
         private void KillNinja(int tick)
         {
             IsAlive[tick] = false;
+            ninjaSpriteRenderer.sprite = ninjaAnimations[playerNumber].DeathAnimation[3];
         }
 
         #endregion

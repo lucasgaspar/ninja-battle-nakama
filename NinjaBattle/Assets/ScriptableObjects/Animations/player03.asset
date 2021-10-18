@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c804460ee792242bdae2fa0ef0ea32bb, type: 3}
+  m_Name: player03
+  m_EditorClassIdentifier: 
+  runAnimation:
+  - {fileID: 21300000, guid: 670f195d264d74e1c856e3dec07ba49b, type: 3}
+  - {fileID: 21300000, guid: 7bd42381b07c04ed6b66fd2d1094d5bc, type: 3}
+  - {fileID: 21300000, guid: 0b069260c2bde42928993326bccec285, type: 3}
+  jumpAnimation:
+  - {fileID: 21300000, guid: 988e4c7d2971a4b1191fdc917a04094b, type: 3}
+  fallAnimation:
+  - {fileID: 21300000, guid: e60c27998288e4a41aae64b8224fd1c8, type: 3}
+  deathAnimation:
+  - {fileID: 21300000, guid: fc96da0455a5a443e930fb1c582f5cbd, type: 3}
+  - {fileID: 21300000, guid: 95d4131988f0e44d6aafe4433dd6c3dc, type: 3}
+  - {fileID: 21300000, guid: 4c1fc2b3db56d42de982b6a52a45bb30, type: 3}
+  - {fileID: 21300000, guid: 2a10a2d651cf843f4b1e76aa1b1c8045, type: 3}
