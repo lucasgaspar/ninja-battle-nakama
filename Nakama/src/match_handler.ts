@@ -166,7 +166,7 @@ function matchLoopRoundResults(gameState: GameState, nakama: nkruntime.Nakama, d
 
 function playerWon(message: nkruntime.MatchMessage, gameState: GameState, dispatcher: nkruntime.MatchDispatcher): void 
 {
-    if (gameState.scene != Scene.Battle)
+    if (gameState.scene != Scene.Battle || gameState.countdown > 0)
         return;
 
     let data: PlayerWonData = JSON.parse(message.data);
@@ -189,7 +189,7 @@ function playerWon(message: nkruntime.MatchMessage, gameState: GameState, dispat
 
 function draw(message: nkruntime.MatchMessage, gameState: GameState, dispatcher: nkruntime.MatchDispatcher): void
 {
-    if (gameState.scene != Scene.Battle)
+    if (gameState.scene != Scene.Battle || gameState.countdown > 0)
         return;
 
     let data: DrawData = JSON.parse(message.data);

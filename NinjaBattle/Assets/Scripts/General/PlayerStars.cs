@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using Nakama;
-
 using NinjaBattle.Game;
 
 namespace NinjaBattle.General
@@ -27,7 +25,7 @@ namespace NinjaBattle.General
             SetPortrait(playersManager.Players);
         }
 
-        private void SetPortrait(List<IUserPresence> players)
+        private void SetPortrait(List<PlayerData> players)
         {
             int playerNumber = portrait.PlayerNumber;
             bool hasPlayer = players.Count > playerNumber && players[playerNumber] != null;

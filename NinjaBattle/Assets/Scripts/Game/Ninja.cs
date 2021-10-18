@@ -125,9 +125,9 @@ namespace NinjaBattle.Game
 
             currentCoordinates = newCoordinates;
             if (currentDirection.ToVector2().x > 0)
-                spriteRenderer.flipX = true;
+                ninjaSpriteRenderer.flipX = true;
             else if (currentDirection.ToVector2().x < 0)
-                spriteRenderer.flipX = false;
+                ninjaSpriteRenderer.flipX = false;
 
             spriteRenderer.transform.position = ((Vector3Int)currentCoordinates);
             positions[tick] = currentCoordinates;
@@ -144,8 +144,12 @@ namespace NinjaBattle.Game
                 currentDirection = directions[tick];
 
             isJumping.EraseFuture(tick);
-            spriteRenderer.transform.localScale = ninjaSpriteRenderer.transform.localScale = Vector3.one * (isJumping[tick] ? JumpScale : NormalScale);
             IsAlive.EraseFuture(tick);
+            spriteRenderer.transform.localScale = ninjaSpriteRenderer.transform.localScale = Vector3.one * (isJumping[tick] ? JumpScale : NormalScale);
+            if (IsAlive.GetLastValue(tick))
+                ninjaSpriteRenderer.sprite = isJumping[tick] ? ninjaAnimations[playerNumber].JumpAnimation[0] : ninjaAnimations[playerNumber].RunAnimation[0];
+            else
+                ninjaSpriteRenderer.sprite = ninjaAnimations[playerNumber].DeathAnimation[3];
         }
 
         private void JumpStart(int tick)

@@ -28,7 +28,7 @@ namespace NinjaBattle.Game
 
         #region BEHAVIORS
 
-        public void Initialize(MapData mapData, List<IUserPresence> players)
+        public void Initialize(MapData mapData, List<PlayerData> players)
         {
             int halfWidth = mapData.Width / 2;
             int halfHeight = mapData.Height / 2;
@@ -52,7 +52,7 @@ namespace NinjaBattle.Game
 
             for (int playerNumber = 0; playerNumber < players.Count; playerNumber++)
                 if (players[playerNumber] != null)
-                    InstantiateNinja(playerNumber, mapData.SpawnPoints[playerNumber], players[playerNumber].SessionId);
+                    InstantiateNinja(playerNumber, mapData.SpawnPoints[playerNumber], players[playerNumber].Presence.SessionId);
         }
 
         public void SetTileAsWall(Vector2Int coordinates)

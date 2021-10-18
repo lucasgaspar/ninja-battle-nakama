@@ -20,18 +20,18 @@ namespace NinjaBattle.Game
 
         #region EVENTS
 
-        public event Action<List<IUserPresence>> onPlayersReceived;
-        public event Action<IUserPresence> onPlayerJoined;
-        public event Action<IUserPresence> onPlayerLeft;
+        public event Action<List<PlayerData>> onPlayersReceived;
+        public event Action<PlayerData> onPlayerJoined;
+        public event Action<PlayerData> onPlayerLeft;
 
         #endregion
 
         #region PROPERTIES
 
         public static PlayersManager Instance { get; private set; } = null;
-        public List<IUserPresence> Players { get; private set; } = new List<IUserPresence>();
+        public List<PlayerData> Players { get; private set; } = new List<PlayerData>();
         public int PlayersCount { get => Players.Count(player => player != null); }
-        public IUserPresence CurrentPlayer { get; private set; } = null;
+        public PlayerData CurrentPlayer { get; private set; } = null;
         public int CurrentPlayerNumber { get; private set; } = -1;
 
         #endregion
@@ -50,6 +50,7 @@ namespace NinjaBattle.Game
             multiplayerManager.onMatchJoin += MatchJoined;
             multiplayerManager.onMatchLeave += ResetLeaved;
             multiplayerManager.Subscribe(MultiplayerManager.Code.Players, SetPlayers);
+            multiplayerManager.Subscribe(MultiplayerManager.Code.PlayerJoined, PlayerJoined);
             multiplayerManager.Subscribe(MultiplayerManager.Code.ChangeScene, MatchStarted);
         }
 
@@ -58,13 +59,27 @@ namespace NinjaBattle.Game
             multiplayerManager.onMatchJoin -= MatchJoined;
             multiplayerManager.onMatchLeave -= ResetLeaved;
             multiplayerManager.Unsubscribe(MultiplayerManager.Code.Players, SetPlayers);
+            multiplayerManager.Unsubscribe(MultiplayerManager.Code.PlayerJoined, PlayerJoined);
             multiplayerManager.Unsubscribe(MultiplayerManager.Code.ChangeScene, MatchStarted);
         }
 
         private void SetPlayers(MultiplayerMessage message)
         {
-            Players = message.GetData<List<UserPresence>>().ToList<IUserPresence>();
+            Players = message.GetData<List<PlayerData>>();
+            Debug.Log(Players[0].DisplayName + " " + Players[0].Presence.SessionId);
             onPlayersReceived?.Invoke(Players);
+        }
+
+        private void PlayerJoined(MultiplayerMessage message)
+        {
+            PlayerData player = message.GetData<PlayerData>();
+            int index = Players.IndexOf(null);
+            if (index > -1)
+                Players[index] = player;
+            else
+                Players.Add(player);
+
+            onPlayerJoined?.Invoke(player);
         }
 
         private void PlayersChanged(IMatchPresenceEvent matchPresenceEvent)
@@ -75,28 +90,20 @@ namespace NinjaBattle.Game
             foreach (IUserPresence userPresence in matchPresenceEvent.Leaves)
             {
                 for (int i = 0; i < Players.Count(); i++)
-                    if (Players[i] != null && Players[i].SessionId == userPresence.SessionId)
+                {
+                    if (Players[i] != null && Players[i].Presence.SessionId == userPresence.SessionId)
+                    {
+                        UnityMainThread.AddJob(() => onPlayerLeft?.Invoke(Players[i]));
                         Players[i] = null;
-
-                UnityMainThread.AddJob(() => onPlayerLeft?.Invoke(userPresence));
-            }
-
-            foreach (IUserPresence userPresence in matchPresenceEvent.Joins)
-            {
-                int index = Players.IndexOf(null);
-                if (index > -1)
-                    Players[index] = userPresence;
-                else
-                    Players.Add(userPresence);
-
-                UnityMainThread.AddJob(() => onPlayerJoined?.Invoke(userPresence));
+                    }
+                }
             }
         }
 
         private void MatchJoined()
         {
             nakamaManager.Socket.ReceivedMatchPresence += PlayersChanged;
-            CurrentPlayer = Players.Find(player => player.SessionId == multiplayerManager.Self.SessionId);
+            CurrentPlayer = Players.Find(player => player.Presence.SessionId == multiplayerManager.Self.SessionId);
             CurrentPlayerNumber = Players.IndexOf(CurrentPlayer);
         }
 

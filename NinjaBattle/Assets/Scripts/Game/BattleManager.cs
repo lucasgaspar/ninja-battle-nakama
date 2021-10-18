@@ -17,7 +17,7 @@ namespace NinjaBattle.Game
         [SerializeField] private List<MapData> maps = null;
         [SerializeField] private Map map = null;
 
-        private List<IUserPresence> players = null;
+        private List<PlayerData> players = null;
         private MapData currentMap = null;
 
         #endregion
@@ -67,7 +67,7 @@ namespace NinjaBattle.Game
         private int GetPlayerNumber(string sessionId)
         {
             for (int i = 0; i < players.Count; i++)
-                if (players[i].SessionId == sessionId)
+                if (players[i].Presence.SessionId == sessionId)
                     return i;
 
             return -1;

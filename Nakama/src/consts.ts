@@ -9,6 +9,6 @@ const PlayerNotFound = -1;
 
 const MessagesLogic: { [opCode: number]: (message: nkruntime.MatchMessage, state: GameState, dispatcher: nkruntime.MatchDispatcher) => void } =
 {
-    2: playerWon,
-    3: draw
+    3: playerWon,
+    4: draw
 }

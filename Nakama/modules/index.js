@@ -156,7 +156,7 @@ function matchLoopRoundResults(gameState, nakama, dispatcher) {
     }
 }
 function playerWon(message, gameState, dispatcher) {
-    if (gameState.scene != 4 /* Battle */)
+    if (gameState.scene != 4 /* Battle */ || gameState.countdown > 0)
         return;
     var data = JSON.parse(message.data);
     var tick = data.tick;
@@ -173,7 +173,7 @@ function playerWon(message, gameState, dispatcher) {
     dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
 }
 function draw(message, gameState, dispatcher) {
-    if (gameState.scene != 4 /* Battle */)
+    if (gameState.scene != 4 /* Battle */ || gameState.countdown > 0)
         return;
     var data = JSON.parse(message.data);
     var tick = data.tick;
@@ -221,6 +221,6 @@ var NecessaryWins = 3;
 var MaxPlayers = 4;
 var PlayerNotFound = -1;
 var MessagesLogic = {
-    2: playerWon,
-    3: draw
+    3: playerWon,
+    4: draw
 };

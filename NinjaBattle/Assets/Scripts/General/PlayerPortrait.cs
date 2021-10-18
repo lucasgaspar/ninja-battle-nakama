@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
-using Nakama;
 
 using NinjaBattle.Game;
 
@@ -49,26 +48,26 @@ namespace NinjaBattle.General
             playersManager.onPlayersReceived -= PlayersReceived;
         }
 
-        private void PlayersReceived(List<IUserPresence> players)
+        private void PlayersReceived(List<PlayerData> players)
         {
             SetPortrait(players);
         }
 
-        private void PlayerLeft(IUserPresence player)
+        private void PlayerLeft(PlayerData player)
         {
             SetPortrait(playersManager.Players);
         }
 
-        private void PlayerJoined(IUserPresence player)
+        private void PlayerJoined(PlayerData player)
         {
             SetPortrait(playersManager.Players);
         }
 
-        private void SetPortrait(List<IUserPresence> players)
+        private void SetPortrait(List<PlayerData> players)
         {
             bool hasPlayer = players.Count > playerNumber && players[playerNumber] != null;
             portrait.color = hasPlayer ? connectedPlayerColor : noPlayerColor;
-            displayName.text = hasPlayer ? "Player " + (playerNumber + 1) : string.Empty;
+            displayName.text = hasPlayer ? players[playerNumber].DisplayName : string.Empty;
             displayName.color = playersManager.CurrentPlayerNumber == playerNumber ? youColor : othersColor;
         }
 

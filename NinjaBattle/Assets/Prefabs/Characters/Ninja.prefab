@@ -163,7 +163,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &7257370952237778839
@@ -218,8 +218,8 @@ MonoBehaviour:
   - {r: 0.19607845, g: 0.76470596, b: 0.49411768, a: 1}
   - {r: 0.7411765, g: 0.28235295, b: 0.79215693, a: 1}
   ninjaSpriteRenderer: {fileID: 5584673203298062165}
-  ninjaSprites:
-  - {fileID: 21300000, guid: 79bc5fbec5a934c3fbe14bbc717d419f, type: 3}
-  - {fileID: 21300000, guid: b4cc89b502dcc48b8a26c64a3738d2c5, type: 3}
-  - {fileID: 21300000, guid: f3ea25af21d614a55a474290ce1d3013, type: 3}
-  - {fileID: 21300000, guid: 38afe11350a55419287bfc31fcd9ab43, type: 3}
+  ninjaAnimations:
+  - {fileID: 11400000, guid: a55fb89ada20b4d3caa196a97cd62a22, type: 2}
+  - {fileID: 11400000, guid: def8c383d0307483890aa46801534929, type: 2}
+  - {fileID: 11400000, guid: 13202ced9d0a14a4aa5bc31f66ca35bb, type: 2}
+  - {fileID: 11400000, guid: 3356c0434f6934cadbbcc593c69de2f5, type: 2}

@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using Nakama;
-
 using NinjaBattle.Game;
 
 namespace NinjaBattle.General
@@ -36,17 +34,17 @@ namespace NinjaBattle.General
             playersManager.onPlayersReceived -= PlayersReceived;
         }
 
-        private void PlayersReceived(List<IUserPresence> players)
+        private void PlayersReceived(List<PlayerData> players)
         {
             UpdateStatus();
         }
 
-        private void PlayerLeft(IUserPresence player)
+        private void PlayerLeft(PlayerData player)
         {
             UpdateStatus();
         }
 
-        private void PlayerJoined(IUserPresence player)
+        private void PlayerJoined(PlayerData player)
         {
             UpdateStatus();
         }
