@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using Nakama;
+using Nakama.Helpers;
 
 namespace NinjaBattle.Game
 {
@@ -13,6 +13,7 @@ namespace NinjaBattle.Game
         [SerializeField] private GameObject waterPrefab = null;
         [SerializeField] private GameObject wallPrefab = null;
         [SerializeField] private Ninja ninjaPrefab = null;
+        [SerializeField] private GameCamera gameCamera = null;
 
         private List<Vector2Int> mapWallTiles = new List<Vector2Int>();
         private List<Vector2Int> mapDangerousTiles = new List<Vector2Int>();
@@ -106,6 +107,8 @@ namespace NinjaBattle.Game
             Ninja ninja = Instantiate(ninjaPrefab, transform);
             ninja.Initialize(spawnPoint, playerNumber, this, sessionId);
             Ninjas.Add(ninja);
+            if (MultiplayerManager.Instance.Self.SessionId == sessionId)
+                gameCamera.SetStartingPosition(spawnPoint.Coordinates);
         }
 
         public Ninja GetNinja(int playerNumber)

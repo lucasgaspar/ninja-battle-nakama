@@ -66,7 +66,6 @@ namespace NinjaBattle.Game
         private void SetPlayers(MultiplayerMessage message)
         {
             Players = message.GetData<List<PlayerData>>();
-            Debug.Log(Players[0].DisplayName + " " + Players[0].Presence.SessionId);
             onPlayersReceived?.Invoke(Players);
         }
 

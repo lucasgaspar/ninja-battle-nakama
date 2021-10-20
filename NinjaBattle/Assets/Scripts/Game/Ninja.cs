@@ -24,6 +24,8 @@ namespace NinjaBattle.Game
         private RollbackVar<bool> isJumping = new RollbackVar<bool>();
         private Map map = null;
         private int playerNumber = 0;
+        private Vector3 currentVelocity = Vector3.zero;
+        private Animation currentAnimation = null;
 
         #endregion
 
@@ -45,7 +47,7 @@ namespace NinjaBattle.Game
             this.map = map;
             spriteRenderer.transform.position = ninjaSpriteRenderer.transform.position = ((Vector3Int)currentCoordinates);
             spriteRenderer.color = ninjaColors[playerNumber];
-            ninjaSpriteRenderer.sprite = ninjaAnimations[playerNumber].RunAnimation[0];
+            currentAnimation = ninjaAnimations[playerNumber].RunAnimation;
             BattleManager.Instance.onTick += ProcessTick;
             BattleManager.Instance.onRewind += Rewind;
             isJumping[0] = false;
@@ -53,6 +55,10 @@ namespace NinjaBattle.Game
             positions[0] = currentCoordinates;
             directions[0] = currentDirection;
             SessionId = sessionId;
+            if (currentDirection.ToVector2().x > 0)
+                ninjaSpriteRenderer.flipX = true;
+            else if (currentDirection.ToVector2().x < 0)
+                ninjaSpriteRenderer.flipX = false;
         }
 
         private void OnDestroy()
@@ -61,10 +67,11 @@ namespace NinjaBattle.Game
             BattleManager.Instance.onRewind -= Rewind;
         }
 
-        Vector3 currentVelocity = Vector3.zero;
         private void Update()
         {
             ninjaSpriteRenderer.transform.position = Vector3.SmoothDamp(ninjaSpriteRenderer.transform.position, spriteRenderer.transform.position, ref currentVelocity, 0.175f);
+            if (currentAnimation != null)
+                ninjaSpriteRenderer.sprite = currentAnimation.GetCurrentFrame(Time.deltaTime);
         }
 
         public void SetInput(Direction direction, int tick)
@@ -146,30 +153,34 @@ namespace NinjaBattle.Game
             isJumping.EraseFuture(tick);
             IsAlive.EraseFuture(tick);
             spriteRenderer.transform.localScale = ninjaSpriteRenderer.transform.localScale = Vector3.one * (isJumping[tick] ? JumpScale : NormalScale);
-            if (IsAlive.GetLastValue(tick))
-                ninjaSpriteRenderer.sprite = isJumping[tick] ? ninjaAnimations[playerNumber].JumpAnimation[0] : ninjaAnimations[playerNumber].RunAnimation[0];
+            if (!IsAlive.GetLastValue(tick))
+                currentAnimation = ninjaAnimations[playerNumber].DeathAnimation;
+            else if (isJumping[tick])
+                currentAnimation = ninjaAnimations[playerNumber].JumpAnimation;
             else
-                ninjaSpriteRenderer.sprite = ninjaAnimations[playerNumber].DeathAnimation[3];
+                currentAnimation = ninjaAnimations[playerNumber].RunAnimation;
         }
 
         private void JumpStart(int tick)
         {
             isJumping[tick] = true;
             spriteRenderer.transform.localScale = ninjaSpriteRenderer.transform.localScale = Vector3.one * JumpScale;
-            ninjaSpriteRenderer.sprite = ninjaAnimations[playerNumber].JumpAnimation[0];
+            currentAnimation = ninjaAnimations[playerNumber].JumpAnimation;
+            currentAnimation.Reset();
         }
 
         private void JumpEnd(int tick)
         {
             isJumping[tick] = false;
             spriteRenderer.transform.localScale = ninjaSpriteRenderer.transform.localScale = Vector3.one * NormalScale;
-            ninjaSpriteRenderer.sprite = ninjaAnimations[playerNumber].RunAnimation[0];
+            currentAnimation = ninjaAnimations[playerNumber].RunAnimation;
         }
 
         private void KillNinja(int tick)
         {
             IsAlive[tick] = false;
-            ninjaSpriteRenderer.sprite = ninjaAnimations[playerNumber].DeathAnimation[3];
+            currentAnimation = ninjaAnimations[playerNumber].DeathAnimation;
+            currentAnimation.Reset();
         }
 
         #endregion

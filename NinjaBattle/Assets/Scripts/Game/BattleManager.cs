@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Nakama.Helpers;
-using Nakama;
 
 namespace NinjaBattle.Game
 {
@@ -13,6 +12,7 @@ namespace NinjaBattle.Game
         #region FIELDS
 
         private const float TickRate = 4f;
+        private const float StartDuration = 2.5f;
 
         [SerializeField] private List<MapData> maps = null;
         [SerializeField] private Map map = null;
@@ -82,7 +82,7 @@ namespace NinjaBattle.Game
 
         private void StartGame()
         {
-            InvokeRepeating(nameof(ProcessTick), TickDuration, TickDuration);
+            InvokeRepeating(nameof(ProcessTick), StartDuration, TickDuration);
             onTickEnd += CheckWinner;
         }
 

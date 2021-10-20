@@ -9,19 +9,17 @@ namespace NinjaBattle.Game
 
         private const string MenuName = "NinjaBattle/AnimationData";
 
-        [SerializeField] private Sprite[] runAnimation = null;
-        [SerializeField] private Sprite[] jumpAnimation = null;
-        [SerializeField] private Sprite[] fallAnimation = null;
-        [SerializeField] private Sprite[] deathAnimation = null;
+        [SerializeField] private Animation runAnimation = null;
+        [SerializeField] private Animation jumpAnimation = null;
+        [SerializeField] private Animation deathAnimation = null;
 
         #endregion
 
         #region PROPERTIES
 
-        public Sprite[] RunAnimation { get => runAnimation; }
-        public Sprite[] JumpAnimation { get => jumpAnimation; }
-        public Sprite[] FallAnimation { get => fallAnimation; }
-        public Sprite[] DeathAnimation { get => deathAnimation; }
+        public Animation RunAnimation { get => runAnimation; }
+        public Animation JumpAnimation { get => jumpAnimation; }
+        public Animation DeathAnimation { get => deathAnimation; }
 
         #endregion
     }

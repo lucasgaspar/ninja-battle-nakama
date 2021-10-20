@@ -13,15 +13,23 @@ MonoBehaviour:
   m_Name: player03
   m_EditorClassIdentifier: 
   runAnimation:
-  - {fileID: 21300000, guid: 670f195d264d74e1c856e3dec07ba49b, type: 3}
-  - {fileID: 21300000, guid: 7bd42381b07c04ed6b66fd2d1094d5bc, type: 3}
-  - {fileID: 21300000, guid: 0b069260c2bde42928993326bccec285, type: 3}
+    frames:
+    - {fileID: 21300000, guid: 670f195d264d74e1c856e3dec07ba49b, type: 3}
+    - {fileID: 21300000, guid: 7bd42381b07c04ed6b66fd2d1094d5bc, type: 3}
+    - {fileID: 21300000, guid: 0b069260c2bde42928993326bccec285, type: 3}
+    framesPerSecond: 12
+    loop: 1
   jumpAnimation:
-  - {fileID: 21300000, guid: 988e4c7d2971a4b1191fdc917a04094b, type: 3}
-  fallAnimation:
-  - {fileID: 21300000, guid: e60c27998288e4a41aae64b8224fd1c8, type: 3}
+    frames:
+    - {fileID: 21300000, guid: 988e4c7d2971a4b1191fdc917a04094b, type: 3}
+    - {fileID: 21300000, guid: e60c27998288e4a41aae64b8224fd1c8, type: 3}
+    framesPerSecond: 0
+    loop: 0
   deathAnimation:
-  - {fileID: 21300000, guid: fc96da0455a5a443e930fb1c582f5cbd, type: 3}
-  - {fileID: 21300000, guid: 95d4131988f0e44d6aafe4433dd6c3dc, type: 3}
-  - {fileID: 21300000, guid: 4c1fc2b3db56d42de982b6a52a45bb30, type: 3}
-  - {fileID: 21300000, guid: 2a10a2d651cf843f4b1e76aa1b1c8045, type: 3}
+    frames:
+    - {fileID: 21300000, guid: fc96da0455a5a443e930fb1c582f5cbd, type: 3}
+    - {fileID: 21300000, guid: 95d4131988f0e44d6aafe4433dd6c3dc, type: 3}
+    - {fileID: 21300000, guid: 4c1fc2b3db56d42de982b6a52a45bb30, type: 3}
+    - {fileID: 21300000, guid: 2a10a2d651cf843f4b1e76aa1b1c8045, type: 3}
+    framesPerSecond: 12
+    loop: 0

@@ -220,6 +220,6 @@ MonoBehaviour:
   ninjaSpriteRenderer: {fileID: 5584673203298062165}
   ninjaAnimations:
   - {fileID: 11400000, guid: a55fb89ada20b4d3caa196a97cd62a22, type: 2}
-  - {fileID: 11400000, guid: def8c383d0307483890aa46801534929, type: 2}
-  - {fileID: 11400000, guid: 13202ced9d0a14a4aa5bc31f66ca35bb, type: 2}
-  - {fileID: 11400000, guid: 3356c0434f6934cadbbcc593c69de2f5, type: 2}
+  - {fileID: 11400000, guid: ffe56cbb2404046e8be378e33c6e181b, type: 2}
+  - {fileID: 11400000, guid: 8ea02817a4c214169bb9c37d7630664f, type: 2}
+  - {fileID: 11400000, guid: cffe8d7413e0f4e9daeecfe1c87ffefd, type: 2}
