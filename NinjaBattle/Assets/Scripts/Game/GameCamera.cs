@@ -7,6 +7,7 @@ namespace NinjaBattle.Game
     {
         #region FIELDS
 
+        private const float WaitTime = 0.5f;
         private const float MoveDuration = 2.5f;
         private const float FinalOrtographicSize = 7.6f;
 
@@ -22,6 +23,7 @@ namespace NinjaBattle.Game
 
         private IEnumerator GoToCenter()
         {
+            yield return new WaitForSeconds(WaitTime);
             Camera camera = GetComponent<Camera>();
             float startingOrtographicSize = camera.orthographicSize;
             Vector3 staringPosition = transform.position;

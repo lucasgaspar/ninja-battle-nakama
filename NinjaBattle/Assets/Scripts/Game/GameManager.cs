@@ -11,7 +11,7 @@ namespace NinjaBattle.Game
     {
         #region FIELDS
 
-        private const int VictoriesRequiredToWin = 3;
+        public const int VictoriesRequiredToWin = 3;
 
         #endregion
 
@@ -34,6 +34,7 @@ namespace NinjaBattle.Game
         {
             MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.PlayerWon, ReceivedPlayerWonRound);
             MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.ChangeScene, ReceivedChangeScene);
+            MultiplayerManager.Instance.onMatchJoin += ResetPlayerWins;
             MultiplayerManager.Instance.onMatchLeave += GoToHome;
         }
 
@@ -41,6 +42,7 @@ namespace NinjaBattle.Game
         {
             MultiplayerManager.Instance.Unsubscribe(MultiplayerManager.Code.PlayerWon, ReceivedPlayerWonRound);
             MultiplayerManager.Instance.Unsubscribe(MultiplayerManager.Code.PlayerInput, ReceivedChangeScene);
+            MultiplayerManager.Instance.onMatchJoin -= ResetPlayerWins;
             MultiplayerManager.Instance.onMatchLeave -= GoToHome;
         }
 
@@ -57,9 +59,13 @@ namespace NinjaBattle.Game
             SceneManager.LoadScene(message.GetData<int>());
         }
 
-        private void GoToHome()
+        private void ResetPlayerWins()
         {
             PlayersWins = new int[4];
+        }
+
+        private void GoToHome()
+        {
             SceneManager.LoadScene((int)Scenes.Home);
         }
 

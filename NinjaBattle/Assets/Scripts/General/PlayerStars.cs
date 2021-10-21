@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using NinjaBattle.Game;
 
@@ -12,8 +13,7 @@ namespace NinjaBattle.General
         private PlayersManager playersManager = null;
 
         [SerializeField] private PlayerPortrait portrait = null;
-        [SerializeField] private Transform starsContainer = null;
-        [SerializeField] private GameObject starPrefab = null;
+        [SerializeField] private Image[] stars = null;
 
         #endregion
 
@@ -30,8 +30,10 @@ namespace NinjaBattle.General
             int playerNumber = portrait.PlayerNumber;
             bool hasPlayer = players.Count > playerNumber && players[playerNumber] != null;
             portrait.gameObject.SetActive(hasPlayer);
-            for (int i = 0; i < GameManager.Instance.PlayersWins[playerNumber]; i++)
-                Instantiate(starPrefab, starsContainer);
+            int playersWins = GameManager.Instance.PlayersWins[playerNumber];
+            for (int i = 0; i < GameManager.VictoriesRequiredToWin; i++)
+                if (i < playersWins)
+                    stars[i].color = Color.white;
         }
 
         #endregion

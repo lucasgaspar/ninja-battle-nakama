@@ -11,8 +11,8 @@ namespace NinjaBattle.Game
     {
         #region FIELDS
 
-        private const float TickRate = 4f;
-        private const float StartDuration = 3f;
+        private const float TickRate = 4.5f;
+        private const float StartDuration = 3.5f;
 
         [SerializeField] private List<MapData> maps = null;
         [SerializeField] private Map map = null;
