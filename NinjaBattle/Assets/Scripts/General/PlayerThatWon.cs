@@ -19,8 +19,8 @@ namespace NinjaBattle.General
 
         private void Awake()
         {
-            portrait.PlayerNumber = GameManager.Instance.Winner;
-            winnerPortrait.sprite = playersPortrait[GameManager.Instance.Winner];
+            portrait.PlayerNumber = GameManager.Instance.Winner.Value;
+            winnerPortrait.sprite = playersPortrait[GameManager.Instance.Winner.Value];
         }
 
         #endregion

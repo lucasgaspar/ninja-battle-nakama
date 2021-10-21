@@ -84,6 +84,9 @@ namespace NinjaBattle.Game
 
         public void ProcessTick(int tick)
         {
+            if (BattleManager.Instance.RoundEnded.GetLastValue(tick))
+                return;
+
             if (!IsAlive.GetLastValue(tick))
                 return;
 

@@ -19,7 +19,7 @@ namespace NinjaBattle.Game
 
         public static GameManager Instance { get; private set; } = null;
         public int[] PlayersWins { get; private set; } = new int[4];
-        public int Winner { get; private set; } = 0;
+        public int? Winner { get; private set; } = 0;
 
         #endregion
 
@@ -33,6 +33,7 @@ namespace NinjaBattle.Game
         private void Start()
         {
             MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.PlayerWon, ReceivedPlayerWonRound);
+            MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.Draw, ReceivedDrawRound);
             MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.ChangeScene, ReceivedChangeScene);
             MultiplayerManager.Instance.onMatchJoin += ResetPlayerWins;
             MultiplayerManager.Instance.onMatchLeave += GoToHome;
@@ -41,6 +42,7 @@ namespace NinjaBattle.Game
         private void OnDestroy()
         {
             MultiplayerManager.Instance.Unsubscribe(MultiplayerManager.Code.PlayerWon, ReceivedPlayerWonRound);
+            MultiplayerManager.Instance.Unsubscribe(MultiplayerManager.Code.Draw, ReceivedDrawRound);
             MultiplayerManager.Instance.Unsubscribe(MultiplayerManager.Code.PlayerInput, ReceivedChangeScene);
             MultiplayerManager.Instance.onMatchJoin -= ResetPlayerWins;
             MultiplayerManager.Instance.onMatchLeave -= GoToHome;
@@ -50,8 +52,12 @@ namespace NinjaBattle.Game
         {
             PlayerWonData playerWonData = message.GetData<PlayerWonData>();
             PlayersWins[playerWonData.PlayerNumber]++;
-            if (PlayersWins[playerWonData.PlayerNumber] >= VictoriesRequiredToWin)
-                Winner = playerWonData.PlayerNumber;
+            Winner = playerWonData.PlayerNumber;
+        }
+
+        private void ReceivedDrawRound(MultiplayerMessage message)
+        {
+            Winner = null;
         }
 
         private void ReceivedChangeScene(MultiplayerMessage message)

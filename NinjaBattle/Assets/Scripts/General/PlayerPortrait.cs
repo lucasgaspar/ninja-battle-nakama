@@ -12,8 +12,6 @@ namespace NinjaBattle.General
     {
         #region FIELDS
 
-        private PlayersManager playersManager = null;
-
         [SerializeField] private int playerNumber = 0;
         [SerializeField] private Image portrait = null;
         [SerializeField] private Color noPlayerColor = Color.white;
@@ -21,6 +19,8 @@ namespace NinjaBattle.General
         [SerializeField] private TMP_Text displayName = null;
         [SerializeField] private Color youColor = Color.white;
         [SerializeField] private Color othersColor = Color.white;
+
+        private PlayersManager playersManager = null;
 
         #endregion
 

@@ -33,8 +33,9 @@ namespace NinjaBattle.Game
         #region PROPERTIES
 
         public float TickDuration { get => 1 / TickRate; }
-        public int CurrentTick { get; private set; }
-        public static BattleManager Instance { get; private set; }
+        public int CurrentTick { get; private set; } = default(int);
+        public static BattleManager Instance { get; private set; } = null;
+        public RollbackVar<bool> RoundEnded { get; private set; } = new RollbackVar<bool>();
 
         #endregion
 
@@ -88,7 +89,11 @@ namespace NinjaBattle.Game
 
         private void CheckWinner(int tick)
         {
+            if (RoundEnded.GetLastValue(tick))
+                return;
+
             IEnumerable<Ninja> playersAlive = map.Ninjas.Where(ninja => ninja.IsAlive.GetLastValue(tick));
+            RoundEnded[tick] = false;
             if (playersAlive.Count() > 1)
                 return;
 
@@ -96,6 +101,8 @@ namespace NinjaBattle.Game
                 MultiplayerManager.Instance.Send(MultiplayerManager.Code.Draw, new DrawData(tick));
             else
                 MultiplayerManager.Instance.Send(MultiplayerManager.Code.PlayerWon, new PlayerWonData(tick, GetPlayerNumber(playersAlive.First().SessionId)));
+
+            RoundEnded[tick] = true;
         }
 
         private void ProcessTick()
