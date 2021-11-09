@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,9 +15,8 @@ namespace NinjaBattle.General
         private AudioSource musicChannel = null;
         private AudioSource musicChannelCrossFadeHelper = null;
         private AudioSource soundChannel = null;
-        private Dictionary<int, AudioSource> persistentSoundsChannels = new Dictionary<int, AudioSource>();
         private List<AudioClip> currentSoundClips = new List<AudioClip>();
-        private int persistentCounter = -1;
+        private List<AudioClip> playingSoundClips = new List<AudioClip>();
 
         #endregion
 
@@ -66,8 +64,8 @@ namespace NinjaBattle.General
 
             soundChannel.PlayOneShot(clip);
             currentSoundClips.Add(clip);
-
             StartCoroutine(SoundCooldown(clip, CooldownForSounds));
+            StartCoroutine(Dispose(clip, clip.length));
         }
 
         public IEnumerator SoundCooldown(AudioClip clip, float cooldown)
@@ -76,50 +74,10 @@ namespace NinjaBattle.General
             currentSoundClips.Remove(clip);
         }
 
-        public int PlayPersistentSound(AudioClip clip, float duration = 0f)
+        public IEnumerator Dispose(AudioClip clip, float cooldown)
         {
-            AudioSource persistentSoundChannel = gameObject.AddComponent<AudioSource>();
-            persistentSoundChannel.volume = soundChannel.volume;
-            persistentSoundChannel.mute = soundChannel.mute;
-            persistentSoundChannel.loop = true;
-            persistentSoundChannel.clip = clip;
-            persistentSoundChannel.Play();
-            persistentCounter++;
-            persistentSoundsChannels.Add(persistentCounter, persistentSoundChannel);
-
-            if (duration > 0)
-                StartCoroutine(StopPersistentSoundCoroutine(duration, persistentCounter));
-
-            return persistentCounter;
-        }
-
-        public void StopPersistentSound(int persistentSoundId)
-        {
-            if (!PersistentSoundExists(persistentSoundId))
-                return;
-
-            persistentSoundsChannels[persistentSoundId].Stop();
-            Destroy(persistentSoundsChannels[persistentSoundId]);
-            persistentSoundsChannels.Remove(persistentSoundId);
-        }
-
-        public void StopAllPersistentSounds()
-        {
-            foreach (int id in persistentSoundsChannels.Keys.ToList())
-                StopPersistentSound(id);
-
-            persistentSoundsChannels.Clear();
-        }
-
-        private IEnumerator StopPersistentSoundCoroutine(float duration, int id)
-        {
-            yield return new WaitForSeconds(duration);
-            StopPersistentSound(id);
-        }
-
-        private bool PersistentSoundExists(int persistentSoundId)
-        {
-            return persistentSoundsChannels.ContainsKey(persistentSoundId);
+            yield return new WaitForSecondsRealtime(cooldown);
+            playingSoundClips.Remove(clip);
         }
 
         #endregion

@@ -41,7 +41,8 @@ namespace NinjaBattle.Game
         private void ReceivedPlayerWonRound(MultiplayerMessage message)
         {
             AudioManager.Instance.StopMusic();
-            bool playerWon = MultiplayerManager.Instance.Self.SessionId == message.SessionId;
+            PlayerWonData data = message.GetData<PlayerWonData>();
+            bool playerWon = PlayersManager.Instance.CurrentPlayerNumber == data.PlayerNumber;
             AudioManager.Instance.PlaySound(playerWon ? victorySound : defeatSound);
             text.text = playerWon ? VictoryText : DefeatText;
         }
