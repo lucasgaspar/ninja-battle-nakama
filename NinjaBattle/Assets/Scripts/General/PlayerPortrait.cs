@@ -32,9 +32,13 @@ namespace NinjaBattle.General
 
         #region BEHAVIORS
 
-        private void Start()
+        private void Awake()
         {
             playersManager = PlayersManager.Instance;
+        }
+
+        private void Start()
+        {
             playersManager.onPlayerJoined += PlayerJoined;
             playersManager.onPlayerLeft += PlayerLeft;
             playersManager.onPlayersReceived += PlayersReceived;

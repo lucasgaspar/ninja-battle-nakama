@@ -252,6 +252,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 63f3609d40ea24a508515f3df6af4104, type: 3}
   - {fileID: 21300000, guid: a917c0d612d774202bfd70f18ab7b488, type: 3}
   - {fileID: 21300000, guid: 142ff251d1b794726b6d8251bb2461cf, type: 3}
+  nakamaCollectionObject: {fileID: 11400000, guid: c9ccfa32a3f544c5c9c4702e506225ad, type: 2}
 --- !u!114 &164137529 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4825519343842968135, guid: 95650f13fef4842e3ae8bf31063b240a, type: 3}

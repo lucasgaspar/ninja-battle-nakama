@@ -170,6 +170,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerPortrait (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3213274611284993322, guid: 95650f13fef4842e3ae8bf31063b240a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3213274611284993323, guid: 95650f13fef4842e3ae8bf31063b240a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -514,6 +518,10 @@ PrefabInstance:
     - target: {fileID: 3213274611284993322, guid: 95650f13fef4842e3ae8bf31063b240a, type: 3}
       propertyPath: m_Name
       value: PlayerPortrait (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3213274611284993322, guid: 95650f13fef4842e3ae8bf31063b240a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3213274611284993323, guid: 95650f13fef4842e3ae8bf31063b240a, type: 3}
       propertyPath: m_Pivot.x
@@ -944,6 +952,10 @@ PrefabInstance:
     - target: {fileID: 3213274611284993322, guid: 95650f13fef4842e3ae8bf31063b240a, type: 3}
       propertyPath: m_Name
       value: PlayerPortrait (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3213274611284993322, guid: 95650f13fef4842e3ae8bf31063b240a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3213274611284993323, guid: 95650f13fef4842e3ae8bf31063b240a, type: 3}
       propertyPath: m_Pivot.x
@@ -1438,6 +1450,10 @@ PrefabInstance:
     - target: {fileID: 3213274611284993322, guid: 95650f13fef4842e3ae8bf31063b240a, type: 3}
       propertyPath: m_Name
       value: PlayerPortrait
+      objectReference: {fileID: 0}
+    - target: {fileID: 3213274611284993322, guid: 95650f13fef4842e3ae8bf31063b240a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3213274611284993323, guid: 95650f13fef4842e3ae8bf31063b240a, type: 3}
       propertyPath: m_Pivot.x

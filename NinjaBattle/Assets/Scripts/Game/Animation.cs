@@ -32,7 +32,7 @@ namespace NinjaBattle.Game
         public Sprite GetCurrentFrame(float deltaTime)
         {
             frame += deltaTime * framesPerSecond;
-            if (frame > frames.Length)
+            if (frame >= frames.Length)
                 frame = loop ? 0 : frames.Length - 1;
 
             return frames[CurrentFrame];
