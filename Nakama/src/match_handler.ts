@@ -149,8 +149,32 @@ function matchLoopRoundResults(gameState: GameState, nakama: nkruntime.Nakama, d
         gameState.countdown--;
         if (gameState.countdown == 0)
         {
-            if (playerObtainedNecessaryWins(gameState.playersWins))
+            var winner = getWinner(gameState.playersWins, gameState.players);
+            if (winner != null)
             {
+                let storageReadRequests: nkruntime.StorageReadRequest[] = [{
+                    collection: CollectionUser,
+                    key: KeyTrophies,
+                    userId: winner.presence.userId
+                }];
+
+                let result: nkruntime.StorageObject[] = nakama.storageRead(storageReadRequests);
+                var trophiesData: TrophiesData = { amount: 0 };
+                for (let storageObject of result)
+                {
+                    trophiesData = <TrophiesData>storageObject.value;
+                    break;
+                }
+
+                trophiesData.amount++;
+                let storageWriteRequests: nkruntime.StorageWriteRequest[] = [{
+                    collection: CollectionUser,
+                    key: KeyTrophies,
+                    userId: winner.presence.userId,
+                    value: trophiesData
+                }];
+
+                nakama.storageWrite(storageWriteRequests);
                 gameState.endMatch = true;
                 gameState.scene = Scene.FinalResults;
             }
@@ -222,6 +246,15 @@ function playerObtainedNecessaryWins(playersWins: number[]): boolean
             return true;
 
     return false;
+}
+
+function getWinner(playersWins: number[], players: Player[]): Player | null
+{
+    for (let playerNumber = 0; playerNumber < MaxPlayers; playerNumber++)
+        if (playersWins[playerNumber] == NecessaryWins)
+            return players[playerNumber];
+
+    return null;
 }
 
 function getPlayerNumber(players: Player[], sessionId: string): number

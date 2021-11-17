@@ -35,3 +35,8 @@ interface DrawData
 {
     tick: number
 }
+
+interface TrophiesData
+{
+    amount: number
+}

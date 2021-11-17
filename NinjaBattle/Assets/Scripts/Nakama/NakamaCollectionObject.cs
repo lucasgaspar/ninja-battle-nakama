@@ -53,12 +53,7 @@ namespace Nakama.Helpers
 
         public T GetValue<T>()
         {
-            return Value.Deserialize<T>();
-        }
-
-        public Dictionary<string, string> GetValue()
-        {
-            return Value.Deserialize();
+            return Value == null ? default(T) : Value.Deserialize<T>();
         }
 
         #endregion

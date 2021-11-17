@@ -2484,7 +2484,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294955151
-  m_fontColor: {r: 0.5613208, g: 0.8145002, b: 1, a: 1}
+  m_fontColor: {r: 0.56078434, g: 0.8156863, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -31217,6 +31217,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 155348858}
+  victoryColor: {r: 0.9607843, g: 0.7529412, b: 0, a: 1}
+  defeatColor: {r: 0.7254902, g: 0, b: 0.007843138, a: 1}
+  drawColor: {r: 0.56078434, g: 0.8156863, b: 1, a: 1}
   victorySound: {fileID: 8300000, guid: 06e546ee811f1440db172a7ffc96edb7, type: 3}
   defeatSound: {fileID: 8300000, guid: b6943ea5cb0494edf822070af326f51e, type: 3}
   drawSound: {fileID: 8300000, guid: 458e97b9d59b4437db5d1109d3a9cbde, type: 3}

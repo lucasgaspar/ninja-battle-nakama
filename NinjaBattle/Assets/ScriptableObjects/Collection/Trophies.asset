@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af543d4cdc415483a812e70c8001cfd2, type: 3}
-  m_Name: Collection Object
+  m_Name: Trophies
   m_EditorClassIdentifier: 
   collection: User
   key: Trophies

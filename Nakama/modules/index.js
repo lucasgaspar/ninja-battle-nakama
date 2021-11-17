@@ -144,7 +144,28 @@ function matchLoopRoundResults(gameState, nakama, dispatcher) {
     if (gameState.countdown > 0) {
         gameState.countdown--;
         if (gameState.countdown == 0) {
-            if (playerObtainedNecessaryWins(gameState.playersWins)) {
+            var winner = getWinner(gameState.playersWins, gameState.players);
+            if (winner != null) {
+                var storageReadRequests = [{
+                        collection: CollectionUser,
+                        key: KeyTrophies,
+                        userId: winner.presence.userId
+                    }];
+                var result = nakama.storageRead(storageReadRequests);
+                var trophiesData = { amount: 0 };
+                for (var _i = 0, result_1 = result; _i < result_1.length; _i++) {
+                    var storageObject = result_1[_i];
+                    trophiesData = storageObject.value;
+                    break;
+                }
+                trophiesData.amount++;
+                var storageWriteRequests = [{
+                        collection: CollectionUser,
+                        key: KeyTrophies,
+                        userId: winner.presence.userId,
+                        value: trophiesData
+                    }];
+                nakama.storageWrite(storageWriteRequests);
                 gameState.endMatch = true;
                 gameState.scene = 6 /* FinalResults */;
             }
@@ -198,6 +219,12 @@ function playerObtainedNecessaryWins(playersWins) {
             return true;
     return false;
 }
+function getWinner(playersWins, players) {
+    for (var playerNumber = 0; playerNumber < MaxPlayers; playerNumber++)
+        if (playersWins[playerNumber] == NecessaryWins)
+            return players[playerNumber];
+    return null;
+}
 function getPlayerNumber(players, sessionId) {
     for (var playerNumber = 0; playerNumber < MaxPlayers; playerNumber++)
         if (players[playerNumber] != undefined && players[playerNumber].presence.sessionId == sessionId)
@@ -220,6 +247,8 @@ var DurationBattleEnding = 3;
 var NecessaryWins = 3;
 var MaxPlayers = 4;
 var PlayerNotFound = -1;
+var CollectionUser = "User";
+var KeyTrophies = "Trophies";
 var MessagesLogic = {
     3: playerWon,
     4: draw

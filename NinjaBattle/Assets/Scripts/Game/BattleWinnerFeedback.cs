@@ -16,6 +16,9 @@ namespace NinjaBattle.Game
         public const string DrawText = "DRAW";
 
         [SerializeField] private TMP_Text text = null;
+        [SerializeField] private Color victoryColor = Color.white;
+        [SerializeField] private Color defeatColor = Color.white;
+        [SerializeField] private Color drawColor = Color.white;
         [SerializeField] private AudioClip victorySound = null;
         [SerializeField] private AudioClip defeatSound = null;
         [SerializeField] private AudioClip drawSound = null;
@@ -26,7 +29,6 @@ namespace NinjaBattle.Game
 
         private void Start()
         {
-
             MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.PlayerWon, ReceivedPlayerWonRound);
             MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.Draw, ReceivedDrawRound);
         }
@@ -35,7 +37,6 @@ namespace NinjaBattle.Game
         {
             MultiplayerManager.Instance.Unsubscribe(MultiplayerManager.Code.PlayerWon, ReceivedPlayerWonRound);
             MultiplayerManager.Instance.Unsubscribe(MultiplayerManager.Code.Draw, ReceivedDrawRound);
-
         }
 
         private void ReceivedPlayerWonRound(MultiplayerMessage message)
@@ -45,6 +46,7 @@ namespace NinjaBattle.Game
             bool playerWon = PlayersManager.Instance.CurrentPlayerNumber == data.PlayerNumber;
             AudioManager.Instance.PlaySound(playerWon ? victorySound : defeatSound);
             text.text = playerWon ? VictoryText : DefeatText;
+            text.color = playerWon ? victoryColor : defeatColor;
         }
 
         private void ReceivedDrawRound(MultiplayerMessage message)
@@ -52,6 +54,7 @@ namespace NinjaBattle.Game
             AudioManager.Instance.StopMusic();
             AudioManager.Instance.PlaySound(drawSound);
             text.text = DrawText;
+            text.color = drawColor;
         }
 
         #endregion
