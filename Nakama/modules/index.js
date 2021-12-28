@@ -215,7 +215,7 @@ function playerNumberIsUsed(players, playerNumber) {
 }
 var TickRate = 16;
 var DurationLobby = 10;
-var DurationRoundResults = 10;
+var DurationRoundResults = 5;
 var DurationBattleEnding = 3;
 var NecessaryWins = 3;
 var MaxPlayers = 4;

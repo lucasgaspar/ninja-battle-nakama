@@ -17,6 +17,7 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 670f195d264d74e1c856e3dec07ba49b, type: 3}
     - {fileID: 21300000, guid: 7bd42381b07c04ed6b66fd2d1094d5bc, type: 3}
     - {fileID: 21300000, guid: 0b069260c2bde42928993326bccec285, type: 3}
+    - {fileID: 21300000, guid: 7bd42381b07c04ed6b66fd2d1094d5bc, type: 3}
     framesPerSecond: 12
     loop: 1
   jumpAnimation:

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+using NinjaBattle.General;
+
 namespace NinjaBattle.Game
 {
     public class Ninja : MonoBehaviour
@@ -14,6 +16,8 @@ namespace NinjaBattle.Game
         [SerializeField] private List<Color> ninjaColors = new List<Color>();
         [SerializeField] private SpriteRenderer ninjaSpriteRenderer = null;
         [SerializeField] private List<AnimationData> ninjaAnimations = new List<AnimationData>();
+        [SerializeField] private AudioClip jumpSound = null;
+        [SerializeField] private AudioClip deathSound = null;
 
         private Direction currentDirection = Direction.East;
         private RollbackVar<List<Direction>> nextDirections = new RollbackVar<List<Direction>>();
@@ -170,6 +174,7 @@ namespace NinjaBattle.Game
             spriteRenderer.transform.localScale = ninjaSpriteRenderer.transform.localScale = Vector3.one * JumpScale;
             currentAnimation = ninjaAnimations[playerNumber].JumpAnimation;
             currentAnimation.Reset();
+            AudioManager.Instance.PlaySound(jumpSound);
         }
 
         private void JumpEnd(int tick)
@@ -184,6 +189,7 @@ namespace NinjaBattle.Game
             IsAlive[tick] = false;
             currentAnimation = ninjaAnimations[playerNumber].DeathAnimation;
             currentAnimation.Reset();
+            AudioManager.Instance.PlaySound(deathSound);
         }
 
         #endregion

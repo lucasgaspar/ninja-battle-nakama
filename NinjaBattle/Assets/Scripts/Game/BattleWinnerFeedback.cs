@@ -1,0 +1,58 @@
+using UnityEngine;
+
+using Nakama.Helpers;
+using TMPro;
+
+using NinjaBattle.General;
+
+namespace NinjaBattle.Game
+{
+    public class BattleWinnerFeedback : MonoBehaviour
+    {
+        #region FIELDS
+
+        public const string VictoryText = "VICTORY";
+        public const string DefeatText = "DEFEAT";
+        public const string DrawText = "DRAW";
+
+        [SerializeField] private TMP_Text text = null;
+        [SerializeField] private AudioClip victorySound = null;
+        [SerializeField] private AudioClip defeatSound = null;
+        [SerializeField] private AudioClip drawSound = null;
+
+        #endregion
+
+        #region BEHAVIORS
+
+        private void Start()
+        {
+
+            MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.PlayerWon, ReceivedPlayerWonRound);
+            MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.Draw, ReceivedDrawRound);
+        }
+
+        private void OnDestroy()
+        {
+            MultiplayerManager.Instance.Unsubscribe(MultiplayerManager.Code.PlayerWon, ReceivedPlayerWonRound);
+            MultiplayerManager.Instance.Unsubscribe(MultiplayerManager.Code.Draw, ReceivedDrawRound);
+
+        }
+
+        private void ReceivedPlayerWonRound(MultiplayerMessage message)
+        {
+            AudioManager.Instance.StopMusic();
+            bool playerWon = MultiplayerManager.Instance.Self.SessionId == message.SessionId;
+            AudioManager.Instance.PlaySound(playerWon ? victorySound : defeatSound);
+            text.text = playerWon ? VictoryText : DefeatText;
+        }
+
+        private void ReceivedDrawRound(MultiplayerMessage message)
+        {
+            AudioManager.Instance.StopMusic();
+            AudioManager.Instance.PlaySound(drawSound);
+            text.text = DrawText;
+        }
+
+        #endregion
+    }
+}

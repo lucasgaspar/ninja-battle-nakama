@@ -34,7 +34,6 @@ namespace NinjaBattle.Game
             {
                 elapsedTime += Time.deltaTime;
                 float percentage = elapsedTime / MoveDuration;
-                Debug.Log(percentage);
                 transform.position = Vector3.Lerp(staringPosition, desiredPosition, percentage);
                 camera.orthographicSize = Mathf.Lerp(startingOrtographicSize, FinalOrtographicSize, percentage);
                 yield return null;

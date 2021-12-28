@@ -223,3 +223,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ffe56cbb2404046e8be378e33c6e181b, type: 2}
   - {fileID: 11400000, guid: 8ea02817a4c214169bb9c37d7630664f, type: 2}
   - {fileID: 11400000, guid: cffe8d7413e0f4e9daeecfe1c87ffefd, type: 2}
+  jumpSound: {fileID: 8300000, guid: 8ddfffbb1edd54686b369592cc41624b, type: 3}
+  deathSound: {fileID: 8300000, guid: 8d689766add874518a64d808fabb8e00, type: 3}
