@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Nakama.Helpers
@@ -9,7 +8,6 @@ namespace Nakama.Helpers
         #region FIELDS
 
         [SerializeField] private Button button = null;
-        [SerializeField] private string sceneName = "";
 
         #endregion
 
@@ -20,25 +18,10 @@ namespace Nakama.Helpers
             button.onClick.AddListener(FindMatch);
         }
 
-        private void Start()
-        {
-            MultiplayerManager.Instance.onMatchJoin += ChangeScene;
-        }
-
-        private void OnDestroy()
-        {
-            MultiplayerManager.Instance.onMatchJoin -= ChangeScene;
-        }
-
         private void FindMatch()
         {
             button.interactable = false;
             MultiplayerManager.Instance.JoinMatchAsync();
-        }
-
-        private void ChangeScene()
-        {
-            SceneManager.LoadScene(sceneName);
         }
 
         #endregion

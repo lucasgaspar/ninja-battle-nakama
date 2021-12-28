@@ -1,10 +1,9 @@
-﻿using UnityEngine;
-
-using TMPro;
+﻿using TMPro;
+using UnityEngine;
 
 namespace Nakama.Helpers
 {
-    public class NakamaSetDisplayName : MonoBehaviour
+    public class SetDisplayName : MonoBehaviour
     {
         #region FIELDS
 

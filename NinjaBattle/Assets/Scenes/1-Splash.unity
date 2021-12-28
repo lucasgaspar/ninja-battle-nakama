@@ -315,6 +315,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3929011327487655054, guid: b8bee1fddf1874bcabd749826215736e, type: 3}
+      propertyPath: delay
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3929011327487655054, guid: b8bee1fddf1874bcabd749826215736e, type: 3}
       propertyPath: scene
       value: 2
       objectReference: {fileID: 0}

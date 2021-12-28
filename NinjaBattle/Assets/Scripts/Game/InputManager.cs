@@ -35,7 +35,6 @@ namespace NinjaBattle.Game
 
         private void SendData(int tick, Direction direction)
         {
-            BattleManager battleManager = BattleManager.Instance;
             MultiplayerManager.Instance.Send(MultiplayerManager.Code.PlayerInput, new InputData(tick, (int)direction));
         }
 

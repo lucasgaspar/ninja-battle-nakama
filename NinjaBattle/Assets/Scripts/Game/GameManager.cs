@@ -1,9 +1,7 @@
+using Nakama.Helpers;
+using NinjaBattle.General;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
-using Nakama.Helpers;
-
-using NinjaBattle.General;
 
 namespace NinjaBattle.Game
 {
@@ -35,8 +33,8 @@ namespace NinjaBattle.Game
             MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.PlayerWon, ReceivedPlayerWonRound);
             MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.Draw, ReceivedDrawRound);
             MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.ChangeScene, ReceivedChangeScene);
-            MultiplayerManager.Instance.onMatchJoin += ResetPlayerWins;
-            MultiplayerManager.Instance.onMatchLeave += GoToHome;
+            MultiplayerManager.Instance.onMatchJoin += JoinedMatch;
+            MultiplayerManager.Instance.onMatchLeave += LeavedMatch;
         }
 
         private void OnDestroy()
@@ -44,8 +42,8 @@ namespace NinjaBattle.Game
             MultiplayerManager.Instance.Unsubscribe(MultiplayerManager.Code.PlayerWon, ReceivedPlayerWonRound);
             MultiplayerManager.Instance.Unsubscribe(MultiplayerManager.Code.Draw, ReceivedDrawRound);
             MultiplayerManager.Instance.Unsubscribe(MultiplayerManager.Code.PlayerInput, ReceivedChangeScene);
-            MultiplayerManager.Instance.onMatchJoin -= ResetPlayerWins;
-            MultiplayerManager.Instance.onMatchLeave -= GoToHome;
+            MultiplayerManager.Instance.onMatchJoin -= JoinedMatch;
+            MultiplayerManager.Instance.onMatchLeave -= LeavedMatch;
         }
 
         private void ReceivedPlayerWonRound(MultiplayerMessage message)
@@ -65,6 +63,17 @@ namespace NinjaBattle.Game
             SceneManager.LoadScene(message.GetData<int>());
         }
 
+        private void JoinedMatch()
+        {
+            ResetPlayerWins();
+            GoToLobby();
+        }
+
+        private void LeavedMatch()
+        {
+            GoToHome();
+        }
+
         private void ResetPlayerWins()
         {
             PlayersWins = new int[4];
@@ -73,6 +82,11 @@ namespace NinjaBattle.Game
         private void GoToHome()
         {
             SceneManager.LoadScene((int)Scenes.Home);
+        }
+
+        private void GoToLobby()
+        {
+            SceneManager.LoadScene((int)Scenes.Lobby);
         }
 
         #endregion
