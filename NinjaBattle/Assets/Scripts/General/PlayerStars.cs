@@ -1,8 +1,7 @@
 using System.Collections.Generic;
+using NinjaBattle.Game;
 using UnityEngine;
 using UnityEngine.UI;
-
-using NinjaBattle.Game;
 
 namespace NinjaBattle.General
 {

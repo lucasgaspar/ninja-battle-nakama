@@ -1,10 +1,8 @@
 using System.Collections.Generic;
+using NinjaBattle.Game;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
-using TMPro;
-
-using NinjaBattle.Game;
 
 namespace NinjaBattle.General
 {

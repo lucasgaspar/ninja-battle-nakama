@@ -1,9 +1,7 @@
+using Nakama.Helpers;
+using NinjaBattle.Game;
 using UnityEngine;
 using UnityEngine.UI;
-
-using Nakama.Helpers;
-
-using NinjaBattle.Game;
 
 namespace NinjaBattle.General
 {

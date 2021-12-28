@@ -1,5 +1,3 @@
-using UnityEngine;
-
 using Newtonsoft.Json;
 
 namespace NinjaBattle.Game

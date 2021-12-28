@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using UnityEngine;
-
 using Nakama.Helpers;
+using UnityEngine;
 
 namespace NinjaBattle.Game
 {
