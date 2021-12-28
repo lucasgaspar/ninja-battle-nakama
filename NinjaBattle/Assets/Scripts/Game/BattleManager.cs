@@ -116,6 +116,9 @@ namespace NinjaBattle.Game
             if (tick <= default(int))
                 return;
 
+            if (RoundEnded.GetLastValue(tick))
+                return;
+
             map.GetNinja(playerNumber).SetInput(direction, tick);
             if (tick < CurrentTick)
             {
