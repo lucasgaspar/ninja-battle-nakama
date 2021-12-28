@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NinjaBattle.Game;
 using TMPro;
@@ -40,6 +41,7 @@ namespace NinjaBattle.General
             playersManager.onPlayerJoined += PlayerJoined;
             playersManager.onPlayerLeft += PlayerLeft;
             playersManager.onPlayersReceived += PlayersReceived;
+            playersManager.onLocalPlayerObtained += LocalPlayerObtained;
             SetPortrait(playersManager.Players);
         }
 
@@ -48,6 +50,12 @@ namespace NinjaBattle.General
             playersManager.onPlayerJoined -= PlayerJoined;
             playersManager.onPlayerLeft -= PlayerLeft;
             playersManager.onPlayersReceived -= PlayersReceived;
+            playersManager.onLocalPlayerObtained -= LocalPlayerObtained;
+        }
+
+        private void LocalPlayerObtained(PlayerData player, int playerNumber)
+        {
+            displayName.color = this.playerNumber == playerNumber ? youColor : othersColor;
         }
 
         private void PlayersReceived(List<PlayerData> players)
@@ -67,7 +75,7 @@ namespace NinjaBattle.General
 
         private void SetPortrait(List<PlayerData> players)
         {
-            bool hasPlayer = players.Count > playerNumber && players[playerNumber] != null;
+            bool hasPlayer = players != null && players.Count > playerNumber && players[playerNumber] != null;
             portrait.color = hasPlayer ? connectedPlayerColor : noPlayerColor;
             displayName.text = hasPlayer ? players[playerNumber].DisplayName : string.Empty;
             displayName.color = playersManager.CurrentPlayerNumber == playerNumber ? youColor : othersColor;

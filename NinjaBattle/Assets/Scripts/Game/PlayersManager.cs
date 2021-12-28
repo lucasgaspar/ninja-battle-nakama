@@ -22,6 +22,7 @@ namespace NinjaBattle.Game
         public event Action<List<PlayerData>> onPlayersReceived;
         public event Action<PlayerData> onPlayerJoined;
         public event Action<PlayerData> onPlayerLeft;
+        public event Action<PlayerData, int> onLocalPlayerObtained;
 
         #endregion
 
@@ -66,6 +67,7 @@ namespace NinjaBattle.Game
         {
             Players = message.GetData<List<PlayerData>>();
             onPlayersReceived?.Invoke(Players);
+            GetCurrentPlayer();
         }
 
         private void PlayerJoined(MultiplayerMessage message)
@@ -101,8 +103,23 @@ namespace NinjaBattle.Game
         private void MatchJoined()
         {
             nakamaManager.Socket.ReceivedMatchPresence += PlayersChanged;
+            GetCurrentPlayer();
+        }
+
+        private void GetCurrentPlayer()
+        {
+            if (Players == null)
+                return;
+
+            if (multiplayerManager.Self == null)
+                return;
+
+            if (CurrentPlayer != null)
+                return;
+
             CurrentPlayer = Players.Find(player => player.Presence.SessionId == multiplayerManager.Self.SessionId);
             CurrentPlayerNumber = Players.IndexOf(CurrentPlayer);
+            onLocalPlayerObtained?.Invoke(CurrentPlayer, CurrentPlayerNumber);
         }
 
         private void ResetLeaved()
