@@ -405,6 +405,12 @@ MonoBehaviour:
       m_Calls: []
   onConnected:
     m_PersistentCalls:
+      m_Calls: []
+  onDisconnected:
+    m_PersistentCalls:
+      m_Calls: []
+  onLoginSuccess:
+    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1520398432}
         m_TargetAssemblyTypeName: NinjaBattle.General.SceneChanger, Assembly-CSharp
@@ -418,12 +424,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  onDisconnected:
-    m_PersistentCalls:
-      m_Calls: []
-  onLoginSuccess:
-    m_PersistentCalls:
-      m_Calls: []
   onLoginFail:
     m_PersistentCalls:
       m_Calls: []

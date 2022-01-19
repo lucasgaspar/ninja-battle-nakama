@@ -1,7 +1,8 @@
 ﻿using TMPro;
 using UnityEngine;
+using Nakama.Helpers;
 
-namespace Nakama.Helpers
+namespace NinjaBattle.General
 {
     public class SetDisplayName : MonoBehaviour
     {
