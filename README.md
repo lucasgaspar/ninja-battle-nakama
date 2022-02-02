@@ -1,13 +1,22 @@
 # Ninja Battle
 Ninja Battle is a deterministic multiplayer online game made in Unity that implements basic rollback, intended for use as a example project of different technologies that [Nakama](https://heroiclabs.com/) offers.
+
 Genre: Action PvP
+
 Players: 2 to 4 players
+
 Game engine: Unity 2021.1.18f1
+
 Language: C# for Unity, Typescript for Nakama
+
 Platform: PC, Mac and Web
+
 Multiplayer: Nakama server authoritative
+
 Server logic: Manage score and rounds
+
 Client logic: Send inputs on a deterministic simulation and implement a simple rollback 
+
 Gameplay: You play as a ninja that has to battle against other player-controlled ninjas. When a ninja moves, they leave behind a caltrops path that makes the terrain deadly even for themselves. The ninjas cannot stop moving. You can only control the direction that the ninja is moving in. A single touch to the caltrops eliminates you. The ninja can prevent the damage by jumping over the caltrops automatically. If the ninja runs against a wall or falls into caltrops, he is eliminated instantly. If two ninjas run into each other, both are eliminated.
 
 ## Screenshots
@@ -70,7 +79,7 @@ The current state of `NakamaManager` handles 3 types of login:
 - LoginWithCustomId - Uses a string to handle the authentication, recommended for use for testing on the editor.
 
 To call them you just have to reference the instance of `NakamaManager` and call the function you want, for example on the scene `1-Splash` on the script `NakamaÀutoLogin` it's called like this:
-```
+```csharp
 NakamaManager.Instance.LoginWithUdid();
 ```
 You can hear the response suscribing to the events of NakamaManager 
