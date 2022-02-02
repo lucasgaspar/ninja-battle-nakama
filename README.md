@@ -10,6 +10,12 @@ Server logic: Manage score and rounds
 Client logic: Send inputs on a deterministic simulation and implement a simple rollback 
 Gameplay: You play as a ninja that has to battle against other player-controlled ninjas. When a ninja moves, they leave behind a caltrops path that makes the terrain deadly even for themselves. The ninjas cannot stop moving. You can only control the direction that the ninja is moving in. A single touch to the caltrops eliminates you. The ninja can prevent the damage by jumping over the caltrops automatically. If the ninja runs against a wall or falls into caltrops, he is eliminated instantly. If two ninjas run into each other, both are eliminated.
 
+## Screenshots
+![image](https://user-images.githubusercontent.com/7684147/152168433-d5f475b5-fb7d-4129-94bd-7c2da0c25bbb.png)
+![image](https://user-images.githubusercontent.com/7684147/152169866-cee459fe-f251-4662-a15a-744ea63fa600.png)
+![image](https://user-images.githubusercontent.com/7684147/152170143-c1d0e68d-5469-4c6f-a928-d9214189da31.png)
+![image](https://user-images.githubusercontent.com/7684147/152170370-8311835d-fc17-4b3d-a772-781e9c5d86e8.png)
+
 ## Feel free to contribute
 This is an open source project, all contributions are welcome, if you want to contribute you can create and issue first and we can discuss the changes or the features you want to add in there.
 
