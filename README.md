@@ -48,14 +48,14 @@ The game consist of 7 scenes, numbered from 0 to 6, each scene handle different 
 ## Unity Main Thread
 This is the singleton that gets all the asyncronous requests from Nakama and return them to the main thread. The code is reallhy simple.
 It saves the Actions on a Queue
-```
+```csharp
 public static void AddJob(Action newJob)
 {
    instance.jobs.Enqueue(newJob);
 }
 ```
 And execute them all in order on the next update
-```
+```csharp
 private void Update()
 {
     while (jobs.Count > 0)
@@ -78,7 +78,7 @@ After the login is executed you can subscribe to It has various events you can s
 
 ## Set up a name
 The functionality of setting up a name can be found on the script `SetDisplayName` and on `NakamaUserManager`. On this game we wanted for the players to join a match as soon as possible so if a player don't want to set up a customized name a name will be automatically generated using a combination of two predefined words, this will be done just as soon as the user information is loaded, if there's no name assosiated to that account one will be generated or if its already one it will display it on the area. Now to update the player's name we are suscribing to the `ValueChanged` event of the `TMP_InputField` that each time that it triggers a countown starts so on the moment the player stops typing the name will be saved on the Nakama server, the actual saving of the name is done on the `NakamaUserManager` on the function `UpdateDisplayName``
-```
+```csharp
 public async void UpdateDisplayName(string displayName)
 {
     await NakamaManager.Instance.Client.UpdateAccountAsync(NakamaManager.Instance.Session, null, displayName);
@@ -88,7 +88,7 @@ public async void UpdateDisplayName(string displayName)
 ## Joining a lobby
 The lobby feature consists on two parts one is handled via the unity client and other from a custom rpc call on the nakama server, lets follow the logic:
 1- The player presses the `Battle` button that triggers the `MultiplayerJoinMatchButton` component function `FindMatch`:
-```
+```csharp
 private void FindMatch()
 {
     button.interactable = false;
@@ -96,17 +96,17 @@ private void FindMatch()
 }
 ```
 2- The `MultiplayerManager`registers for the upcoming match states:
-```
+```csharp
 NakamaManager.Instance.Socket.ReceivedMatchState += Receive;
 ```
 3- The RPC "JoinOrCreateMatchRpc" is called using the `NakamaManager`:
-```
+```csharp
 private const string JoinOrCreateMatchRpc = "JoinOrCreateMatchRpc";
-...
+...csharp
 IApiRpc rpcResult = await NakamaManager.Instance.SendRPC(JoinOrCreateMatchRpc);
 ```
 4- On the server the `joinOrCreateMatch` RPC is executed, this RPC finds one match that has still room left for another player and its still open, open reffers that the game has not started yet, and in the case that no match is found a new match will be created.
-```
+```csharp
 let joinOrCreateMatch: nkruntime.RpcFunction = function (context: nkruntime.Context, logger: nkruntime.Logger, nakama: nkruntime.Nakama, payload: string): string
 {
     let matches: nkruntime.Match[];
@@ -121,16 +121,16 @@ let joinOrCreateMatch: nkruntime.RpcFunction = function (context: nkruntime.Cont
 }
 ```
 5- Now back on the client we obtain the matchId returned by the server and send a request to join the match
-```
+```csharp
 string matchId = rpcResult.Payload;
 match = await NakamaManager.Instance.Socket.JoinMatchAsync(matchId);
 ```
 6- The `onMatchJoin` event gets called trough the `UnityMainThread`
-```
+```csharp
 UnityMainThread.AddJob(() => onMatchJoin?.Invoke());
 ```
 7- The `GameManager`is suscribed to `onMatchJoin` and switches to the `3-Lobby` scene
-```
+```csharp
 MultiplayerManager.Instance.onMatchJoin += JoinedMatch;
 ...
 private void JoinedMatch()
