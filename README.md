@@ -176,5 +176,7 @@ IN PROGRESS: After winning a game the trophies are increased on the server and o
 
 ## Credits
 Programming: [Alan Gaspar](https://www.linkedin.com/in/alangaspar/)
+
 Art: [Monica Murillo](https://www.artstation.com/monicamurilloart)
+
 Music: [FoxSynergy](https://opengameart.org/users/foxsynergy) (8-BitNinja) and [Spring Spring](https://opengameart.org/users/spring-spring) (Ninja Theme) (10 Fanfares)
