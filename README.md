@@ -17,7 +17,7 @@ This is an open source project, all contributions are welcome, if you want to co
 The Nakama Helpers are a small library of functions I made intended to be used on any project that uses Nakama, it helps to develop easier or as an example of how to do certain things. Eventually I want to create their own repository and link it with this one, they are not official Nakama utilities.
 
 ## Set Up Nakama
-The easiest way to start with Nakama is with docker, the Nakama documentation offers a nice [guide](httpshttps://heroiclabs.com/docs/nakama/getting-started/docker-quickstart/) on how to do this, the server code on this repository is on TypeScript so it requires installing the TypeScript support too, [here's](https://heroiclabs.com/docs/nakama/server-framework/typescript-setup/) the official documentation on how guide to do this.
+The easiest way to start with Nakama is with docker, the Nakama documentation offers a nice [guide](https://heroiclabs.com/docs/nakama/getting-started/docker-quickstart/) on how to do this, the server code on this repository is on TypeScript so it requires installing the TypeScript support too, [here's](https://heroiclabs.com/docs/nakama/server-framework/typescript-setup/) the official documentation on how guide to do this.
 
 ## Understanding rollback netcode
 The rollback netcode is a type of netcode that uses deterministic simulations on each of the clients and works sending their inputs to the others with the information of the exact time it ocurred, the simulation does not wait for the inputs of other users, but if in a determined moment a message is received with an previous time than the actual time of the simulation the simulation should be able to go back in time, handle the inputs and fastforward to the current time.
