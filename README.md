@@ -159,14 +159,14 @@ For a script to receive a message he must subscribe to the `MultiplayerManager` 
 MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.PlayerInput, ReceivedPlayerInput);
 ```
 All the messages received with the code you subscribed will execute the funcion you passed.
-To send a message you should send a object that can be serialized and the MultiplayerManager handles the serialization
+To send a message you should send a object that can be serialized and the `MultiplayerManager` handles the serialization
 ```csharp
 private void SendData(int tick, Direction direction)
 {
    MultiplayerManager.Instance.Send(MultiplayerManager.Code.PlayerInput, new InputData(tick, (int)direction));
 }
 ```
-To receive a message you should deserialize to the class you want, you can use the GetData<T> to achieve this
+To `receive` a message you should deserialize to the class you want, the `MultiplayerMessage` can do it like this
 ```csharp
 private void ReceivedPlayerInput(MultiplayerMessage message)
 {
@@ -179,23 +179,213 @@ private void ReceivedPlayerInput(MultiplayerMessage message)
 Is a script that holds the unique id of a object or player, in this case is the `SessionId` of each player, if we want to have objects in the scene it could be an auto-incemented number.
 
 ### Spawning players
-IN PROGRESS: How the game spawns the players
+The spawn of the players is made by the `Map` class on initialization, it takes each player and put each one on a spawn point
+```csharp
+public void InstantiateNinja(int playerNumber, SpawnPoint spawnPoint, string sessionId)
+{
+    Ninja ninja = Instantiate(ninjaPrefab, transform);
+    ninja.Initialize(spawnPoint, playerNumber, this, sessionId);
+    Ninjas.Add(ninja);
+    if (MultiplayerManager.Instance.Self.SessionId == sessionId)
+        gameCamera.SetStartingPosition(spawnPoint.Coordinates);
+}
+```
 
 ### RollbackVar
-IN PROGRESS: How it works
+Have in mind that this is the most basic implementation of a rollback, the class `RollbackVar<T>` handles the save of information on a timeline, how it works is that each position and input is saved on a dictionary of an int and a T, being T any type you want, the int part represents each tick of the gameloop.
+```csharp
+private Dictionary<int, T> history = new Dictionary<int, T>();
+```
 
 ## Server game logic
+### RPC
+The RPC (Remote procedure call) helps send information from a client to the server when its outside a match, the registering of the RPC must be done inside of the `InitModule`, int his exaple is on the `main` TypeScript file and the RPC is located under `rpcs` file.
+```typescript
+function InitModule(ctx: nkruntime.Context, logger: nkruntime.Logger, nk: nkruntime.Nakama, initializer: nkruntime.Initializer)
+{
+    initializer.registerRpc("JoinOrCreateMatchRpc", joinOrCreateMatch);
+}
+
+let joinOrCreateMatch: nkruntime.RpcFunction = function (context: nkruntime.Context, logger: nkruntime.Logger, nakama: nkruntime.Nakama, payload: string): string
+{
+    return "response";
+}
+```
+
+On unity you can call the RPC using the client you used to create a socket:
+```csharp
+return await client.RpcAsync(session, rpc, payload);
+```
+
+### Match Handler
+The match handler manages an match, from the lobby to the end results.
+Like the RPCs the registering of the match must be done inside of the `InitModule`, you should assign a name in this case is just called "match", the functions of each state can be found on `match_handler`.
+```typescript
+function InitModule(ctx: nkruntime.Context, logger: nkruntime.Logger, nk: nkruntime.Nakama, initializer: nkruntime.Initializer)
+{
+    initializer.registerMatch("match", {
+        matchInit,
+        matchJoinAttempt,
+        matchJoin,
+        matchLeave,
+        matchLoop,
+        matchTerminate
+    });
+}
+```
+    
+The match is created on the RPC `joinOrCreateMatch`, when creating the match a MatchId is returnes and it should be sent to the clients
+```typescript
+nakama.matchCreate("match");
+```
+
+The `match_handler` holds all the logic of a match, all the data specific of a match will be being passed to all the match functions on a match state object, this is a dictionary and you can cast it to a interface, in this case we use a interface called "GameState"
+```typescript
+interface GameState
+{
+    players: Player[]
+    playersWins: number[]
+    roundDeclaredWins: number[][]
+    roundDeclaredDraw: number[]
+    scene: Scene
+    countdown: number
+    endMatch: boolean
+}
+```
+You can find the initialization of this state on the matchInit function
+```typescript
+let matchInit: nkruntime.MatchInitFunction = function (context: nkruntime.Context, logger: nkruntime.Logger, nakama: nkruntime.Nakama, params: { [key: string]: string })
+{
+    var label: MatchLabel = { open: true }
+    var gameState: GameState =
+    {
+        players: [],
+        playersWins: [],
+        roundDeclaredWins: [[]],
+        roundDeclaredDraw: [],
+        scene: Scene.Lobby,
+        countdown: DurationLobby * TickRate,
+        endMatch: false
+    }
+
+    return {
+        state: gameState,
+        tickRate: TickRate,
+        label: JSON.stringify(label),
+    }
+}
+```
+### MatchLoop
+The matchLoop is the function that gets called each tick, on each of these ticks all the client's messages sent on that period of time are received as a list, with this list you can decide what to do with the messages, to send them back to the clients or execute a custom logic.
+
+### Scenes
+On this example the server behavior are separated on different logical Scenes, each scene have a different behaviour, so each tick only runs the logic of that scene.
+The flow of a match goes like this:
+Lobby -> Battle -> RoundResult -> if no player has obtained 3 victories go back to Battle, if a player has already obtained 3 victories end the match.
+
+### Custom and default messages logic
+Each tick all the messages received by the clients are received by the `matchLoop` then they are processed on the `processMessages` function, if a message code has a custom logic a special fuction is called or if there is no custom logic a default logic will be eecuted, in this example the custom logics are registered on the `consts` file and the default logic just send the message to all the clients.
+```typescript
+function processMessages(messages: nkruntime.MatchMessage[], gameState: GameState, dispatcher: nkruntime.MatchDispatcher): void
+{
+    for (let message of messages)
+    {
+        let opCode: number = message.opCode;
+        if (MessagesLogic.hasOwnProperty(opCode))
+            MessagesLogic[opCode](message, gameState, dispatcher);
+        else
+            messagesDefaultLogic(message, gameState, dispatcher);
+    }
+}
+
+function messagesDefaultLogic(message: nkruntime.MatchMessage, gameState: GameState, dispatcher: nkruntime.MatchDispatcher): void
+{
+    dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
+}
+```
+
 ### Time counters
-IN PROGRESS: How the time is counted on each scene
+On the scenes `Lobby` and `RoundResults` the server runs countdown to wait for the next scene, you can see how it works on the `Lobby` scene behaviour
+```typescript
+function matchLoopLobby(gameState: GameState, nakama: nkruntime.Nakama, dispatcher: nkruntime.MatchDispatcher): void
+{
+    if (gameState.countdown > 0 && getPlayersCount(gameState.players) > 1)
+    {
+        gameState.countdown--;
+        if (gameState.countdown == 0)
+        {
+            gameState.scene = Scene.Battle;
+            dispatcher.broadcastMessage(OperationCode.ChangeScene, JSON.stringify(gameState.scene));
+            dispatcher.matchLabelUpdate(JSON.stringify({ open: false }));
+        }
+    }
+}
+```
+The countdown is set on matchJoin when a player joins, the duration is on seconds and its multiplied to the tick rate of the server
+```typescript
+gameState.countdown = DurationLobby * TickRate;
+```
 
-### Determining winners
-IN PROGRESS: An special logic should be handled in the server to know who really won the battle
+### Determining battle winners
+Since the game uses rollback there can be a erroneous message sent by a client telling who was the winner of the match, for example if there are two players remaining and a client sees a one of them hitting a wall he can determine wrongly that the player lose the battle, but is possible that the player turned just before hitting the wall, when a client determines a victory a message is sent to the server, if the server got messages of every player determining that on the same tick the same outcome then the server can trust the clients and determine who was the winner. This is done on the `playerWon` function.
+```typescript
+function playerWon(message: nkruntime.MatchMessage, gameState: GameState, dispatcher: nkruntime.MatchDispatcher): void 
+{
+    if (gameState.scene != Scene.Battle || gameState.countdown > 0)
+        return;
 
-### Wins
-IN PROGRESS: Save how many rounds each player has won to know who is the final winner.
+    let data: PlayerWonData = JSON.parse(message.data);
+    let tick: number = data.tick;
+    let playerNumber: number = data.playerNumber;
+    if (gameState.roundDeclaredWins[tick] == undefined)
+        gameState.roundDeclaredWins[tick] = [];
 
-## Saving/Loading user information
-IN PROGRESS: After winning a game the trophies are increased on the server and on the scene home you can see the current count of thropies
+    if (gameState.roundDeclaredWins[tick][playerNumber] == undefined)
+        gameState.roundDeclaredWins[tick][playerNumber] = 0;
+
+    gameState.roundDeclaredWins[tick][playerNumber]++;
+    if (gameState.roundDeclaredWins[tick][playerNumber] < getPlayersCount(gameState.players))
+        return;
+
+    gameState.playersWins[playerNumber]++;
+    gameState.countdown = DurationBattleEnding * TickRate;
+    dispatcher.broadcastMessage(message.opCode, message.data, null, message.sender);
+}
+```
+
+### Ending a match
+When a player has reached 3 victories or all the players has been disconected the match ends, this can be done by returning null on any of the match fuctions, this behaviour can be seen on the matchLoop.
+```typescript
+return gameState.endMatch ? null : { state: gameState };
+```
+
+## Incrementing user trophies
+The winner of the game gets a trophy when the match ends, to do this a storage read of a user is done and the variable is incremented by the desired amount and then a storage write is done after that.
+```typescript
+let storageReadRequests: nkruntime.StorageReadRequest[] = [{
+    collection: CollectionUser,
+    key: KeyTrophies,
+    userId: winner.presence.userId
+}];
+
+let result: nkruntime.StorageObject[] = nakama.storageRead(storageReadRequests);
+var trophiesData: TrophiesData = { amount: 0 };
+for (let storageObject of result)
+{
+    trophiesData = <TrophiesData>storageObject.value;
+    break;
+}
+
+trophiesData.amount++;
+let storageWriteRequests: nkruntime.StorageWriteRequest[] = [{
+    collection: CollectionUser,
+    key: KeyTrophies,
+    userId: winner.presence.userId,
+    value: trophiesData
+}];
+
+nakama.storageWrite(storageWriteRequests);
+```
 
 ## Credits
 Programming: [Alan Gaspar](https://www.linkedin.com/in/alangaspar/)
