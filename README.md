@@ -175,7 +175,7 @@ private void ReceivedPlayerInput(MultiplayerMessage message)
 }
 ```
 
-### MultiplayerIdentity
+### Multiplayer Identity
 Is a script that holds the unique id of a object or player, in this case is the `SessionId` of each player, if we want to have objects in the scene it could be an auto-incemented number.
 
 ### Spawning players
@@ -191,7 +191,7 @@ public void InstantiateNinja(int playerNumber, SpawnPoint spawnPoint, string ses
 }
 ```
 
-### RollbackVar
+### Rollback Var
 Have in mind that this is the most basic implementation of a rollback, the class `RollbackVar<T>` handles the save of information on a timeline, how it works is that each position and input is saved on a dictionary of an int and a T, being T any type you want, the int part represents each tick of the gameloop.
 ```csharp
 private Dictionary<int, T> history = new Dictionary<int, T>();
@@ -275,7 +275,7 @@ let matchInit: nkruntime.MatchInitFunction = function (context: nkruntime.Contex
     }
 }
 ```
-### MatchLoop
+### Match Loop
 The matchLoop is the function that gets called each tick, on each of these ticks all the client's messages sent on that period of time are received as a list, with this list you can decide what to do with the messages, to send them back to the clients or execute a custom logic.
 
 ### Scenes
