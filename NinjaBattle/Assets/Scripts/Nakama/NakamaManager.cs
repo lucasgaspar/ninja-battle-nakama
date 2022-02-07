@@ -78,16 +78,16 @@ namespace Nakama.Helpers
             try
             {
                 session = await sessionTask;
-                socket = client.NewSocket();
+                socket = client.NewSocket(true);
                 socket.Connected += Connected;
                 socket.Closed += Disconnected;
                 await socket.ConnectAsync(session);
-                UnityMainThread.AddJob(() => onLoginSuccess?.Invoke());
+                onLoginSuccess?.Invoke();
             }
             catch (Exception exception)
             {
                 Debug.Log(exception);
-                UnityMainThread.AddJob(() => onLoginFail?.Invoke());
+                onLoginFail?.Invoke();
             }
         }
 
@@ -98,12 +98,12 @@ namespace Nakama.Helpers
 
         private void Connected()
         {
-            UnityMainThread.AddJob(() => onConnected?.Invoke());
+            onConnected?.Invoke();
         }
 
         private void Disconnected()
         {
-            UnityMainThread.AddJob(() => onDisconnected?.Invoke());
+            onDisconnected?.Invoke();
         }
 
         public async Task<IApiRpc> SendRPC(string rpc, string payload = "{}")

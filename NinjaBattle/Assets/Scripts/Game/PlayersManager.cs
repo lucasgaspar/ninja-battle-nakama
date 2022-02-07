@@ -93,7 +93,7 @@ namespace NinjaBattle.Game
                 {
                     if (Players[i] != null && Players[i].Presence.SessionId == userPresence.SessionId)
                     {
-                        UnityMainThread.AddJob(() => onPlayerLeft?.Invoke(Players[i]));
+                        onPlayerLeft?.Invoke(Players[i]);
                         Players[i] = null;
                     }
                 }

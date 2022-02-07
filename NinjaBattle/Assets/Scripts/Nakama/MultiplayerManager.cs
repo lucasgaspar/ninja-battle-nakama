@@ -63,7 +63,7 @@ namespace Nakama.Helpers
             IApiRpc rpcResult = await NakamaManager.Instance.SendRPC(JoinOrCreateMatchRpc);
             string matchId = rpcResult.Payload;
             match = await NakamaManager.Instance.Socket.JoinMatchAsync(matchId);
-            UnityMainThread.AddJob(() => onMatchJoin?.Invoke());
+            onMatchJoin?.Invoke();
         }
 
         private void Disconnected()
@@ -80,7 +80,7 @@ namespace Nakama.Helpers
             NakamaManager.Instance.Socket.ReceivedMatchState -= Receive;
             await NakamaManager.Instance.Socket.LeaveMatchAsync(match);
             match = null;
-            UnityMainThread.AddJob(() => onMatchLeave?.Invoke());
+            onMatchLeave?.Invoke();
         }
 
         public void Send(Code code, object data = null)
@@ -108,19 +108,16 @@ namespace Nakama.Helpers
 
         private void Receive(IMatchState newState)
         {
-            UnityMainThread.AddJob(() =>
+            if (enableLog)
             {
-                if (enableLog)
-                {
-                    var encoding = System.Text.Encoding.UTF8;
-                    var json = encoding.GetString(newState.State);
-                    LogData(ReceivedDataLog, newState.OpCode, json);
-                }
+                var encoding = System.Text.Encoding.UTF8;
+                var json = encoding.GetString(newState.State);
+                LogData(ReceivedDataLog, newState.OpCode, json);
+            }
 
-                MultiplayerMessage multiplayerMessage = new MultiplayerMessage(newState);
-                if (onReceiveData.ContainsKey(multiplayerMessage.DataCode))
-                    onReceiveData[multiplayerMessage.DataCode]?.Invoke(multiplayerMessage);
-            });
+            MultiplayerMessage multiplayerMessage = new MultiplayerMessage(newState);
+            if (onReceiveData.ContainsKey(multiplayerMessage.DataCode))
+                onReceiveData[multiplayerMessage.DataCode]?.Invoke(multiplayerMessage);
         }
 
         public void Subscribe(Code code, Action<MultiplayerMessage> action)
