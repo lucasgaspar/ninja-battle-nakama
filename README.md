@@ -52,25 +52,7 @@ The game consist of 7 scenes, numbered from 0 to 6, each scene handle different 
 | 6-FinalResults | Show the winner of the game. |
 
 ## Nakama Manager
-`NakamaManager` is the base script of all the Nakama Helpers, on this script you can Login and Logout and send RPC to the server. The calls of the server are asyncronous so there's another singleton to return to the Unity main thread called `UnityMainThread` in the scene `0-Initializer` you can find a prefab called `Managers`that have both the NakamaManager and MainThread.
-
-## Unity Main Thread
-This is the singleton that gets all the asyncronous requests from Nakama and return them to the main thread. The code is reallhy simple.
-It saves the Actions on a Queue
-```csharp
-public static void AddJob(Action newJob)
-{
-   instance.jobs.Enqueue(newJob);
-}
-```
-And execute them all in order on the next update
-```csharp
-private void Update()
-{
-    while (jobs.Count > 0)
-        jobs.Dequeue().Invoke();
-}
-```
+`NakamaManager` is the base script of all the Nakama Helpers, on this script you can Login and Logout and send RPC to the server.
 
 ## Login
 The current state of `NakamaManager` handles 3 types of login:
@@ -134,9 +116,9 @@ let joinOrCreateMatch: nkruntime.RpcFunction = function (context: nkruntime.Cont
 string matchId = rpcResult.Payload;
 match = await NakamaManager.Instance.Socket.JoinMatchAsync(matchId);
 ```
-6- The `onMatchJoin` event gets called trough the `UnityMainThread`
+6- The `onMatchJoin` event gets called
 ```csharp
-UnityMainThread.AddJob(() => onMatchJoin?.Invoke());
+onMatchJoin?.Invoke();
 ```
 7- The `GameManager`is suscribed to `onMatchJoin` and switches to the `3-Lobby` scene
 ```csharp
@@ -156,13 +138,45 @@ private void GoToLobby()
 
 ## Client game logic
 ### MultiplayerManager
-IN PROGRESS: Subscribe and suscribe to messsages.
+The `MultiplayerManager` is the responsable for joining a match and sending and receiving messages from and to the match on the server. To find a specific match a RPC is sent to the server that helps creating or joining a match. The specific steps can be found on the `Joining a Lobby` section.
+To receive and send messages we want to sepearate the different behaviours by using a code, you can find the codes I used for this game in `MultiplayerManager.OperationCode` let's take a look into each one:
+| Code | Name | Logic |
+| ------ | ------ | ------ |
+| 0 | Players | Is a list with of the players including their display name, is sent by the server to the new player when a he joins the match |
+| 1 | PlayerJoined | Is the display name of the new player, is sent to all other players by the server when a new player joins the match |
+| 2 | PlayerInput | This is the direction that the player wants to move, is sent by the client to all other clients |
+| 3 | PlayerWon | This is when a player reported that someone won the match, every client must report the same result to the server to trust the client |
+| 4 | Draw | This is when a player reported that the game ended on a draw, every client must report the same result to the server to trust the client |
+| 5 | ChangeScene | Sent by the server to all clients to report to which scene the client should change |
 
-### Lobby
-IN PROGRESS: Wait for other players and time counter
+The `MultiplayerManager` is subscribed to a match state change just before joining the match like this:
+```csharp
+socket.ReceivedMatchState += Receive;
+```
+The idea is that the `MultiplayerManager` will receive all the messages and distribute them to the interested behaviours.
+For a script to receive a message he must subscribe to the `MultiplayerManager` like this:
+```csharp
+MultiplayerManager.Instance.Subscribe(MultiplayerManager.Code.PlayerInput, ReceivedPlayerInput);
+```
+All the messages received with the code you subscribed will execute the funcion you passed.
+To send a message you should send a object that can be serialized and the MultiplayerManager handles the serialization
+```csharp
+private void SendData(int tick, Direction direction)
+{
+   MultiplayerManager.Instance.Send(MultiplayerManager.Code.PlayerInput, new InputData(tick, (int)direction));
+}
+```
+To receive a message you should deserialize to the class you want, you can use the GetData<T> to achieve this
+```csharp
+private void ReceivedPlayerInput(MultiplayerMessage message)
+{
+   InputData inputData = message.GetData<InputData>();
+   SetPlayerInput(GetPlayerNumber(message.SessionId), inputData.Tick, (Direction)inputData.Direction);
+}
+```
 
 ### MultiplayerIdentity
-IN PROGRESS: How each player have their own unique id
+Is a script that holds the unique id of a object or player, in this case is the `SessionId` of each player, if we want to have objects in the scene it could be an auto-incemented number.
 
 ### Spawning players
 IN PROGRESS: How the game spawns the players
